@@ -1,4 +1,4 @@
-package com.example.utairestrike.src.hardware;
+package com.example.utairestrike.src.hardware.sensorWrapper;
 
 import static android.hardware.Sensor.TYPE_GRAVITY;
 import static android.hardware.Sensor.TYPE_GYROSCOPE;
@@ -10,7 +10,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import com.example.utairestrike.src.hardware.sensorWrapper.SensorWrapper;
+import lombok.Getter;
 
 public class SensorConnector extends Activity implements SensorEventListener {
     private final SensorManager mSensorManager;
@@ -18,9 +18,13 @@ public class SensorConnector extends Activity implements SensorEventListener {
     private final Sensor mGyroscope;
     private final Sensor mGravimeter;
     private final Sensor mMagnetometer;
+    @Getter
     private final SensorWrapper accelerometer;
+    @Getter
     private final SensorWrapper gyroscope;
+    @Getter
     private final SensorWrapper gravimeter;
+    @Getter
     private final SensorWrapper magnetometer;
 
     public SensorConnector() {

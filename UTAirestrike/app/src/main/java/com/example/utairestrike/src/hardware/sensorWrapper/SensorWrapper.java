@@ -1,13 +1,12 @@
 package com.example.utairestrike.src.hardware.sensorWrapper;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class SensorWrapper {
-    float X;
-    float Y;
-    float Z;
+    private float X;
+    private float Y;
+    private float Z;
 
     public SensorWrapper() {
     }
