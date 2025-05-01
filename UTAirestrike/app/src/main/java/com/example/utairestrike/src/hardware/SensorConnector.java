@@ -10,19 +10,29 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import com.example.utairestrike.src.hardware.sensorWrapper.SensorWrapper;
+
 public class SensorConnector extends Activity implements SensorEventListener {
     private final SensorManager mSensorManager;
     private final Sensor mAccelerometer;
     private final Sensor mGyroscope;
     private final Sensor mGravimeter;
-    private final Sensor mMagentometer;
+    private final Sensor mMagnetometer;
+    private final SensorWrapper accelerometer;
+    private final SensorWrapper gyroscope;
+    private final SensorWrapper gravimeter;
+    private final SensorWrapper magnetometer;
 
     public SensorConnector() {
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mGyroscope = mSensorManager.getDefaultSensor(TYPE_GYROSCOPE);
         mGravimeter = mSensorManager.getDefaultSensor(TYPE_GRAVITY);
-        mMagentometer = mSensorManager.getDefaultSensor(TYPE_MAGNETIC_FIELD);
+        mMagnetometer = mSensorManager.getDefaultSensor(TYPE_MAGNETIC_FIELD);
+        magnetometer = new SensorWrapper();
+        gravimeter = new SensorWrapper();
+        gyroscope = new SensorWrapper();
+        accelerometer = new SensorWrapper();
     }
 
     protected void onResume() {
@@ -30,7 +40,7 @@ public class SensorConnector extends Activity implements SensorEventListener {
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mGravimeter, SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(this, mMagentometer, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     protected void onPause() {
@@ -43,6 +53,26 @@ public class SensorConnector extends Activity implements SensorEventListener {
         System.out.println(sensorName + ": X: " + sensorEvent.values[0] +
                 "; Y: " + sensorEvent.values[1] +
                 "; Z: " + sensorEvent.values[2] + ";");
+        setSensorWrapper(sensorEvent);
+
+    }
+
+    private void setSensorWrapper(SensorEvent event) {
+        SensorWrapper sensor = nameToWrapper(event.sensor.getName());
+        sensor.denoise(event.values[0], event.values[1], event.values[2]);
+    }
+
+    private SensorWrapper nameToWrapper(String name) {
+        if (name.equals(mAccelerometer.getName()))
+            return accelerometer;
+        if (name.equals(mMagnetometer.getName()))
+            return magnetometer;
+        if (name.equals(mGravimeter.getName()))
+            return gravimeter;
+        if (name.equals(mGyroscope.getName()))
+            return gyroscope;
+        else
+            throw new UnknownError();
     }
 
     public void onAccuracyChanged(Sensor sensor, int acc) {}
