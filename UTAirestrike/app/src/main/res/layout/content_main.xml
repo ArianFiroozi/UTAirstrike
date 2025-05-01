@@ -1,9 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    tools:context=".ui.MainActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <TextView
+        android:id="@+id/YAccelerometer"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="YAccelerometer"
+        app:layout_constraintStart_toEndOf="@id/XAccelerometer"
+        app:layout_constraintTop_toBottomOf="@id/accelerometer" />
+
+    <TextView
+        android:id="@+id/accelerometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:text="Accelerometer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/XGyroscope" />
+
+    <TextView
+        android:id="@+id/Xgravity"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:text="Xgravity"
+        app:layout_constraintStart_toStartOf="@id/gravity"
+        app:layout_constraintTop_toBottomOf="@id/gravity" />
+
+    <TextView
+        android:id="@+id/gravity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:text="Gravity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/XAccelerometer" />
+
+    <TextView
+        android:id="@+id/Magnet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="12dp"
+        android:text="Magnetometer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Xgravity" />
+
+    <TextView
+        android:id="@+id/XGyroscope"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="224dp"
+        android:text="XGyroscope"
+        app:layout_constraintStart_toStartOf="@id/Gyroscope"
+        app:layout_constraintTop_toBottomOf="@id/Gyroscope" />
+
+    <TextView
+        android:id="@+id/ZGyroscope"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="224dp"
+        android:text="ZGyroscope"
+        app:layout_constraintStart_toEndOf="@id/YGyroscope"
+        app:layout_constraintTop_toBottomOf="@id/Gyroscope" />
+
+    <TextView
+        android:id="@+id/YGyroscope"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="224dp"
+        android:text="YGyroscope"
+        app:layout_constraintStart_toEndOf="@id/XGyroscope"
+        app:layout_constraintTop_toBottomOf="@id/Gyroscope" />
+
+    <TextView
+        android:id="@+id/Zgravity"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="12dp"
+        android:text="Zgravity"
+        app:layout_constraintStart_toEndOf="@id/Ygravity"
+        app:layout_constraintTop_toBottomOf="@id/gravity" />
+
+    <TextView
+        android:id="@+id/XMagnet"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:text="XMagnet"
+        app:layout_constraintStart_toStartOf="@id/Magnet"
+        app:layout_constraintTop_toBottomOf="@id/Magnet" />
+
+    <TextView
+        android:id="@+id/XAccelerometer"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:text="XAccelerometer"
+        app:layout_constraintStart_toStartOf="@id/accelerometer"
+        app:layout_constraintTop_toBottomOf="@id/accelerometer" />
+
+    <TextView
+        android:id="@+id/YMagnet"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:text="YMagnet"
+        app:layout_constraintStart_toEndOf="@id/XMagnet"
+        app:layout_constraintTop_toBottomOf="@id/Magnet" />
+
+    <TextView
+        android:id="@+id/ZMagnet"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="12dp"
+        android:text="ZMagnet"
+        app:layout_constraintStart_toEndOf="@id/YMagnet"
+        app:layout_constraintTop_toBottomOf="@id/Magnet" />
+
+    <TextView
+        android:id="@+id/ZAccelerometer"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:text="ZAccelerometer"
+        app:layout_constraintStart_toEndOf="@id/YAccelerometer"
+        app:layout_constraintTop_toBottomOf="@id/accelerometer" />
+
+    <TextView
+        android:id="@+id/Ygravity"
+        android:layout_width="90dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:text="Ygravity"
+        app:layout_constraintStart_toEndOf="@id/Xgravity"
+        app:layout_constraintTop_toBottomOf="@id/gravity" />
+
+    <!--        app:layout_constraintBottom_toTopOf="@+id/XGyroscope"-->
+        />
+
+    <TextView
+        android:id="@+id/Gyroscope"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gyroscope"
+        app:layout_editor_absoluteX="20dp"
+        app:layout_editor_absoluteY="92dp" />
 
     <fragment
         android:id="@+id/nav_host_fragment_content_main"
@@ -16,4 +192,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_graph" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
