@@ -1,12 +1,9 @@
 package com.example.utairestrike.src.hardware;
 
-import com.example.utairestrike.src.hardware.sensorWrapper.SensorConnector;
+import com.example.utairestrike.src.hardware.sensorWrapper.SensorWrapper;
 
 public class PhoneSensors {
-//    private final SensorConnector connector;
-
     public PhoneSensors(){
-//        connector = new SensorConnector();
     }
 
     public AircraftSpeed getSpeed() {

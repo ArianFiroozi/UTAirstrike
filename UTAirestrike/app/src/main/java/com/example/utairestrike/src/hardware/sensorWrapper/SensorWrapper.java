@@ -1,19 +1,32 @@
 package com.example.utairestrike.src.hardware.sensorWrapper;
 
-import lombok.Getter;
-
-@Getter
 public class SensorWrapper {
-    private float X;
-    private float Y;
-    private float Z;
-
-    public SensorWrapper() {
+    public static class Accelerometer {
+        public static float X, Y, Z;
+        static float[] denoise() {
+            return new float[]{X, Y, Z};
+        }
     }
 
-    public void denoise(float x, float y, float z) {
-        X=x;
-        Y=y;
-        Z=z;
+    public static class Gyroscope {
+        public static float X, Y, Z;
+        static float[] denoise() {
+            return new float[]{X, Y, Z};
+        }
+    }
+
+    public static class Magnetometer {
+        public static float X, Y, Z;
+        static float[] denoise() {
+            return new float[]{X, Y, Z};
+        }
+    }
+
+    public static class Gravimeter {
+        public static float X, Y, Z;
+        static float[] denoise() {
+            return new float[]{X, Y, Z};
+        }
     }
 }
+

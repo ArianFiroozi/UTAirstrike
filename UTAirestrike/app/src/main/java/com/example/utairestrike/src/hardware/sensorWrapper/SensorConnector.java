@@ -4,14 +4,11 @@ import static android.hardware.Sensor.TYPE_GRAVITY;
 import static android.hardware.Sensor.TYPE_GYROSCOPE;
 import static android.hardware.Sensor.TYPE_MAGNETIC_FIELD;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-
-import lombok.Getter;
 
 public class SensorConnector implements SensorEventListener {
     private final SensorManager mSensorManager;
@@ -19,14 +16,6 @@ public class SensorConnector implements SensorEventListener {
     private final Sensor mGyroscope;
     private final Sensor mGravimeter;
     private final Sensor mMagnetometer;
-    @Getter
-    private final SensorWrapper accelerometer;
-    @Getter
-    private final SensorWrapper gyroscope;
-    @Getter
-    private final SensorWrapper gravimeter;
-    @Getter
-    private final SensorWrapper magnetometer;
     private SensorListener sensorListener;
 
     public SensorConnector(Context context) {
@@ -35,10 +24,6 @@ public class SensorConnector implements SensorEventListener {
         mGyroscope = mSensorManager.getDefaultSensor(TYPE_GYROSCOPE);
         mGravimeter = mSensorManager.getDefaultSensor(TYPE_GRAVITY);
         mMagnetometer = mSensorManager.getDefaultSensor(TYPE_MAGNETIC_FIELD);
-        magnetometer = new SensorWrapper();
-        gravimeter = new SensorWrapper();
-        gyroscope = new SensorWrapper();
-        accelerometer = new SensorWrapper();
     }
 
     public void setSensorUpdateListener(SensorListener listener) {
@@ -73,15 +58,34 @@ public class SensorConnector implements SensorEventListener {
                 "; Y: " + sensorEvent.values[1] +
                 "; Z: " + sensorEvent.values[2] + ";");
         setSensorWrapper(sensorEvent);
-
+        updateSensorListener(sensorEvent);
     }
 
     private void setSensorWrapper(SensorEvent event) {
-        SensorWrapper sensor = nameToWrapper(event.sensor.getName());
+        String name = event.sensor.getName();
+        if (name.equals(mAccelerometer.getName())){
+            SensorWrapper.Accelerometer.X = event.values[0];
+            SensorWrapper.Accelerometer.Y = event.values[1];
+            SensorWrapper.Accelerometer.Z = event.values[2];
+        }
+        if (name.equals(mMagnetometer.getName())){
+            SensorWrapper.Magnetometer.X = event.values[0];
+            SensorWrapper.Magnetometer.Y = event.values[1];
+            SensorWrapper.Magnetometer.Z = event.values[2];
+        }
+        if (name.equals(mGravimeter.getName())){
+            SensorWrapper.Gravimeter.X = event.values[0];
+            SensorWrapper.Gravimeter.Y = event.values[1];
+            SensorWrapper.Gravimeter.Z = event.values[2];
+        }
+        if (name.equals(mGyroscope.getName())){
+            SensorWrapper.Gyroscope.X = event.values[0];
+            SensorWrapper.Gyroscope.Y = event.values[1];
+            SensorWrapper.Gyroscope.Z = event.values[2];
+        }
+    }
 
-        if (sensor != null)
-            sensor.denoise(event.values[0], event.values[1], event.values[2]);
-
+    private void updateSensorListener(SensorEvent event) {
         if (sensorListener == null) return;
 
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
@@ -92,20 +96,6 @@ public class SensorConnector implements SensorEventListener {
             sensorListener.onGravimeterUpdate(event.values[0], event.values[1], event.values[2]);
         else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
             sensorListener.onMagnetometerUpdate(event.values[0], event.values[1], event.values[2]);
-
-    }
-
-    private SensorWrapper nameToWrapper(String name) {
-        if (name.equals(mAccelerometer.getName()))
-            return accelerometer;
-        if (name.equals(mMagnetometer.getName()))
-            return magnetometer;
-        if (name.equals(mGravimeter.getName()))
-            return gravimeter;
-        if (name.equals(mGyroscope.getName()))
-            return gyroscope;
-        else
-            return null;
     }
 
     public void onAccuracyChanged(Sensor sensor, int acc) {}
