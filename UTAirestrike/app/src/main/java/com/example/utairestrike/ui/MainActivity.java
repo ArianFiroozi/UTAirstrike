@@ -69,9 +69,10 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                sensorConnector.startCalibration();
+                Snackbar.make(view, "Calibrating... Please keep the phone still", Snackbar.LENGTH_SHORT)
                         .setAnchorView(R.id.fab)
-                        .setAction("Action", null).show();
+                        .show();
             }
         });
     }
