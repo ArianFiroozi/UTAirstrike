@@ -18,6 +18,10 @@ public class SensorConnector implements SensorEventListener {
     private final Sensor mMagnetometer;
     private SensorListener sensorListener;
 
+    private MadgwickAHRS madgwick = new MadgwickAHRS();
+    private final float[] accel = new float[3];
+    private final float[] gyro = new float[3];
+    private final float[] magnet = new float[3];
     private static final int CALIBRATION_SAMPLE_COUNT = 100;
     private int calibrationSampleIndex = 0;
     private boolean isCalibrating = false;
@@ -71,7 +75,7 @@ public class SensorConnector implements SensorEventListener {
         int type = sensorEvent.sensor.getType();
 
         if (isCalibrating && calibrationSampleIndex < CALIBRATION_SAMPLE_COUNT) {
-            System.out.println("Calibrating..." + calibrationSampleIndex);
+            System.out.println("Calibrating...");
             if (type == Sensor.TYPE_ACCELEROMETER) {
                 System.arraycopy(values, 0, accelSamples[calibrationSampleIndex], 0, 3);
             } else if (type == Sensor.TYPE_GYROSCOPE) {
@@ -105,10 +109,35 @@ public class SensorConnector implements SensorEventListener {
             values[1] -= magnetBias[1];
             values[2] -= magnetBias[2];
         }
+        if (type == Sensor.TYPE_ACCELEROMETER)
+            System.arraycopy(values, 0, accel, 0, 3);
+        else if (type == Sensor.TYPE_GYROSCOPE)
+            System.arraycopy(values, 0, gyro, 0, 3);
+        else if (type == Sensor.TYPE_MAGNETIC_FIELD)
+            System.arraycopy(values, 0, magnet, 0, 3);
 
+// When all three are available, update the filter:
+        if (accel != null && gyro != null && magnet != null) {
+            madgwick.update(
+                    gyro[0], gyro[1], gyro[2],
+                    accel[0], accel[1], accel[2],
+                    magnet[0], magnet[1], magnet[2]
+            );
+            float[] quat = madgwick.getQuaternion();
+            System.out.println("Quaternion: q0=" + quat[0] +
+                    ", q1=" + quat[1] +
+                    ", q2=" + quat[2] +
+                    ", q3=" + quat[3]);
+            System.out.println("ACC: " + accel[0] + ", " + accel[1] + ", " + accel[2]);
+            System.out.println("GYRO: " + gyro[0] + ", " + gyro[1] + ", " + gyro[2]);
+            System.out.println("MAG: " + magnet[0] + ", " + magnet[1] + ", " + magnet[2]);
+
+            // Convert to Euler angles if needed and pass to listener
+        }
         System.out.println(sensorEvent.sensor.getName() + ": X: " + values[0] +
                 "; Y: " + values[1] +
                 "; Z: " + values[2] + ";");
+
         updateSensorListenerValues(sensorEvent.sensor, values);
     }
     private void updateSensorListenerValues(Sensor sensor, float[] values) {
