@@ -17,9 +17,16 @@ public class SensorConnector implements SensorEventListener {
     private final Sensor mGravimeter;
     private final Sensor mMagnetometer;
     private SensorListener sensorListener;
-    private final float sampleRate= 0.125f;
+    private float sampleRate;
+    private float accSampleRate;
+    private float gyroSampleRate;
+    private float magnetSampleRate;
+    private final long[] accTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
+    private final long[] gyroTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
+    private final long[] magnetTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
     private final float filterBeta = 1f;
-    private MadgwickAHRS mMadgwick = new MadgwickAHRS(sampleRate , filterBeta);
+
+    private MadgwickAHRS mMadgwick;
     private final float[] accel = new float[3];
     private final float[] gyro = new float[3];
     private final float[] magnet = new float[3];
@@ -39,6 +46,14 @@ public class SensorConnector implements SensorEventListener {
         mGyroscope = mSensorManager.getDefaultSensor(TYPE_GYROSCOPE);
         mGravimeter = mSensorManager.getDefaultSensor(TYPE_GRAVITY);
         mMagnetometer = mSensorManager.getDefaultSensor(TYPE_MAGNETIC_FIELD);
+
+        sampleRate = 0f ;
+        magnetSampleRate = 0f;
+        accSampleRate = 0f ;
+        gyroSampleRate = 0f;
+
+        mMadgwick = new MadgwickAHRS(1);
+
     }
 
     public void setSensorUpdateListener(SensorListener listener) {
@@ -76,21 +91,30 @@ public class SensorConnector implements SensorEventListener {
         int type = sensorEvent.sensor.getType();
 
         if (isCalibrating && calibrationSampleIndex < CALIBRATION_SAMPLE_COUNT) {
-            System.out.println("Calibrating...");
+            System.out.println("Calibrating..." + calibrationSampleIndex );
+            long currentTime = System.nanoTime();
             if (type == Sensor.TYPE_ACCELEROMETER) {
                 System.arraycopy(values, 0, accelSamples[calibrationSampleIndex], 0, 3);
+                accTimestamps[calibrationSampleIndex] = currentTime;
             } else if (type == Sensor.TYPE_GYROSCOPE) {
                 System.arraycopy(values, 0, gyroSamples[calibrationSampleIndex], 0, 3);
+                gyroTimestamps[calibrationSampleIndex] = currentTime;
+
             } else if (type == Sensor.TYPE_MAGNETIC_FIELD) {
                 System.arraycopy(values, 0, magnetSamples[calibrationSampleIndex], 0, 3);
+                magnetTimestamps[calibrationSampleIndex] = currentTime;
             }
 
             if (type == Sensor.TYPE_MAGNETIC_FIELD) {
                 calibrationSampleIndex++;
                 if (calibrationSampleIndex >= CALIBRATION_SAMPLE_COUNT) {
                     computeBiases();
+                    computeSampleRates();  // <-- Add this
                     isCalibrating = false;
+
+                    mMadgwick = new MadgwickAHRS(1/Math.min(accSampleRate, Math.min(gyroSampleRate, magnetSampleRate)), filterBeta);
                     System.out.println("Calibration complete.");
+
                 }
             }
             return;
@@ -155,6 +179,24 @@ public class SensorConnector implements SensorEventListener {
         else if (type == Sensor.TYPE_MAGNETIC_FIELD)
             sensorListener.onMagnetometerUpdate(values[0], values[1], values[2]);
 
+    }
+    private void computeSampleRates() {
+        accSampleRate = computeRateFromTimestamps(accTimestamps);
+        gyroSampleRate = computeRateFromTimestamps(gyroTimestamps);
+        magnetSampleRate = computeRateFromTimestamps(magnetTimestamps);
+
+        System.out.println("Accelerometer Sample Rate: " + accSampleRate + " Hz");
+        System.out.println("Gyroscope Sample Rate: " + gyroSampleRate + " Hz");
+        System.out.println("Magnetometer Sample Rate: " + magnetSampleRate + " Hz");
+    }
+    private float computeRateFromTimestamps(long[] timestamps) {
+        if (timestamps.length < 2) return 0;
+        long totalInterval = 0;
+        for (int i = 1; i < timestamps.length; i++) {
+            totalInterval += (timestamps[i] - timestamps[i - 1]);
+        }
+        float averageInterval = totalInterval / (float) (timestamps.length - 1); // nanoseconds
+        return 1_000_000_000f / averageInterval;  // Convert to Hz
     }
     private void computeBiases() {
         for (int i = 0; i < 3; i++) {
