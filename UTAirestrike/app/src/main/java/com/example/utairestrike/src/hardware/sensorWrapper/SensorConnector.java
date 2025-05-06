@@ -24,7 +24,7 @@ public class SensorConnector implements SensorEventListener {
     private final long[] accTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
     private final long[] gyroTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
     private final long[] magnetTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
-    private final float filterBeta = 1f;
+    private final float filterBeta = 0.5f;
 
     private MadgwickAHRS mMadgwick;
     private final float[] accel = new float[3];
@@ -140,6 +140,7 @@ public class SensorConnector implements SensorEventListener {
             System.arraycopy(values, 0, gyro, 0, 3);
         else if (type == Sensor.TYPE_MAGNETIC_FIELD)
             System.arraycopy(values, 0, magnet, 0, 3);
+        float[] quat = mMadgwick.getQuaternion();
 
 // When all three are available, update the filter:
         if (accel != null && gyro != null && magnet != null) {
@@ -148,7 +149,6 @@ public class SensorConnector implements SensorEventListener {
                     accel[0], accel[1], accel[2],
                     magnet[0], magnet[1], magnet[2]
             );
-            float[] quat = mMadgwick.getQuaternion();
             System.out.println("Quaternion: q0=" + quat[0] +
                     ", q1=" + quat[1] +
                     ", q2=" + quat[2] +
@@ -163,15 +163,21 @@ public class SensorConnector implements SensorEventListener {
         System.out.println(sensorEvent.sensor.getName() + ": X: " + values[0] +
                 "; Y: " + values[1] +
                 "; Z: " + values[2] + ";");
-
-        updateSensorListenerValues(sensorEvent.sensor, values);
+        values[0]= roundTo3Decimals(values[0]);
+        values[1]= roundTo3Decimals(values[1]);
+        values[2]= roundTo3Decimals(values[2]);
+        quat[0]= roundTo3Decimals(quat[0]);
+        quat[1]= roundTo3Decimals(quat[1]);
+        quat[2]= roundTo3Decimals(quat[2]);
+        quat[3]= roundTo3Decimals(quat[3]);
+        updateSensorListenerValues(sensorEvent.sensor, values, quat);
     }
-    private void updateSensorListenerValues(Sensor sensor, float[] values) {
+    private void updateSensorListenerValues(Sensor sensor, float[] values, float [] q ) {
         if (sensorListener == null) return;
 
         int type = sensor.getType();
         if (type == Sensor.TYPE_ACCELEROMETER)
-            sensorListener.onAccelerometerUpdate(values[0], values[1], values[2]);
+            sensorListener.onAccelerometerUpdate(q[1], q[2], q[3]);
         else if (type == Sensor.TYPE_GYROSCOPE)
             sensorListener.onGyroscopeUpdate(values[0], values[1], values[2]);
         else if (type == Sensor.TYPE_GRAVITY)
@@ -179,6 +185,9 @@ public class SensorConnector implements SensorEventListener {
         else if (type == Sensor.TYPE_MAGNETIC_FIELD)
             sensorListener.onMagnetometerUpdate(values[0], values[1], values[2]);
 
+    }
+    private float roundTo3Decimals(float value) {
+        return Math.round(value * 1000f) / 1000f;
     }
     private void computeSampleRates() {
         accSampleRate = computeRateFromTimestamps(accTimestamps);
