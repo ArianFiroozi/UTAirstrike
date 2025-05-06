@@ -196,6 +196,7 @@ public class SensorConnector implements SensorEventListener {
             totalInterval += (timestamps[i] - timestamps[i - 1]);
         }
         float averageInterval = totalInterval / (float) (timestamps.length - 1); // nanoseconds
+        System.out.println(averageInterval);
         return 1_000_000_000f / averageInterval;  // Convert to Hz
     }
     private void computeBiases() {
