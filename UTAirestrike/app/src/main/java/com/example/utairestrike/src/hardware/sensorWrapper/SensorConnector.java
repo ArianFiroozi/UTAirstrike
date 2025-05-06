@@ -17,8 +17,9 @@ public class SensorConnector implements SensorEventListener {
     private final Sensor mGravimeter;
     private final Sensor mMagnetometer;
     private SensorListener sensorListener;
-
-    private MadgwickAHRS madgwick = new MadgwickAHRS();
+    private final float sampleRate= 0.125f;
+    private final float filterBeta = 1f;
+    private MadgwickAHRS mMadgwick = new MadgwickAHRS(sampleRate , filterBeta);
     private final float[] accel = new float[3];
     private final float[] gyro = new float[3];
     private final float[] magnet = new float[3];
@@ -118,16 +119,17 @@ public class SensorConnector implements SensorEventListener {
 
 // When all three are available, update the filter:
         if (accel != null && gyro != null && magnet != null) {
-            madgwick.update(
+            mMadgwick.update(
                     gyro[0], gyro[1], gyro[2],
                     accel[0], accel[1], accel[2],
                     magnet[0], magnet[1], magnet[2]
             );
-            float[] quat = madgwick.getQuaternion();
+            float[] quat = mMadgwick.getQuaternion();
             System.out.println("Quaternion: q0=" + quat[0] +
                     ", q1=" + quat[1] +
                     ", q2=" + quat[2] +
                     ", q3=" + quat[3]);
+
             System.out.println("ACC: " + accel[0] + ", " + accel[1] + ", " + accel[2]);
             System.out.println("GYRO: " + gyro[0] + ", " + gyro[1] + ", " + gyro[2]);
             System.out.println("MAG: " + magnet[0] + ", " + magnet[1] + ", " + magnet[2]);
@@ -152,6 +154,7 @@ public class SensorConnector implements SensorEventListener {
             sensorListener.onGravimeterUpdate(values[0], values[1], values[2]);
         else if (type == Sensor.TYPE_MAGNETIC_FIELD)
             sensorListener.onMagnetometerUpdate(values[0], values[1], values[2]);
+
     }
     private void computeBiases() {
         for (int i = 0; i < 3; i++) {
