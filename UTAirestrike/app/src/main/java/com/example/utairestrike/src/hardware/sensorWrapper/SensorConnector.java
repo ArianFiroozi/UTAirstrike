@@ -24,7 +24,14 @@ public class SensorConnector implements SensorEventListener {
     private final long[] accTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
     private final long[] gyroTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
     private final long[] magnetTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
-    private final float filterBeta = 0.5f;
+    private final float filterBeta = 0.1f;
+
+    private static final float ALPHA = 0.1f;  // Low-pass filter smoothing factor
+
+    private final float[] filteredAccel = new float[3];
+    private final float[] filteredGyro = new float[3];
+    private final float[] filteredMagnet = new float[3];
+
 
     private MadgwickAHRS mMadgwick;
     private final float[] accel = new float[3];
@@ -54,6 +61,11 @@ public class SensorConnector implements SensorEventListener {
 
         mMadgwick = new MadgwickAHRS(1);
 
+    }
+    private void lowPassFilter(float[] input, float[] output) {
+        for (int i = 0; i < input.length; i++) {
+            output[i] = output[i] + ALPHA * (input[i] - output[i]);
+        }
     }
 
     public void setSensorUpdateListener(SensorListener listener) {
@@ -125,30 +137,38 @@ public class SensorConnector implements SensorEventListener {
             values[0] -= accelBias[0];
             values[1] -= accelBias[1];
             values[2] -= accelBias[2];
-        } else if (type == Sensor.TYPE_GYROSCOPE) {
+
+            lowPassFilter(values, filteredAccel);
+            System.arraycopy(filteredAccel, 0, accel, 0, 3);
+            System.arraycopy(filteredAccel, 0, values, 0, 3);
+        }
+        else if (type == Sensor.TYPE_GYROSCOPE) {
             values[0] -= gyroBias[0];
             values[1] -= gyroBias[1];
             values[2] -= gyroBias[2];
-        } else if (type == Sensor.TYPE_MAGNETIC_FIELD) {
+
+            lowPassFilter(values, filteredGyro);
+            System.arraycopy(filteredGyro, 0, gyro, 0, 3);
+            System.arraycopy(filteredGyro, 0, values, 0, 3);
+        }
+        else if (type == Sensor.TYPE_MAGNETIC_FIELD) {
             values[0] -= magnetBias[0];
             values[1] -= magnetBias[1];
             values[2] -= magnetBias[2];
-        }
-        if (type == Sensor.TYPE_ACCELEROMETER)
-            System.arraycopy(values, 0, accel, 0, 3);
-        else if (type == Sensor.TYPE_GYROSCOPE)
-            System.arraycopy(values, 0, gyro, 0, 3);
-        else if (type == Sensor.TYPE_MAGNETIC_FIELD)
-            System.arraycopy(values, 0, magnet, 0, 3);
-        float[] quat = mMadgwick.getQuaternion();
 
+            lowPassFilter(values, filteredMagnet);
+            System.arraycopy(filteredMagnet, 0, magnet, 0, 3);
+            System.arraycopy(filteredMagnet, 0, values, 0, 3);
+        }
+        float[] quat = new float[3];
 // When all three are available, update the filter:
         if (accel != null && gyro != null && magnet != null) {
             mMadgwick.update(
-                    gyro[0], gyro[1], gyro[2],
-                    accel[0], accel[1], accel[2],
-                    magnet[0], magnet[1], magnet[2]
+                    filteredGyro[0], filteredGyro[1], filteredGyro[2],
+                    filteredAccel[0], filteredAccel[1], filteredAccel[2],
+                    filteredMagnet[0], filteredMagnet[1], filteredMagnet[2]
             );
+            quat= mMadgwick.getQuaternion();
             System.out.println("Quaternion: q0=" + quat[0] +
                     ", q1=" + quat[1] +
                     ", q2=" + quat[2] +
