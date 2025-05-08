@@ -5,7 +5,7 @@ import com.example.utairestrike.src.utill.Vector2D;
 
 public class Building extends GameObject {
     public Building(Vector2D position, Vector2D size) {
-        super(position, new Vector2D(), size);
+        super(position, new Vector2D(), size, 0);
     }
 
     @Override

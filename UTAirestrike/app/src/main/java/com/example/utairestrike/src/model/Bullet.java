@@ -7,8 +7,7 @@ public class Bullet extends GameObject {
     public static Vector2D BULLET_SIZE = new Vector2D(1, 1);
     private float rotation;
     public Bullet(Vector2D position, Vector2D velocity, float rotation) {
-        super(position, velocity, BULLET_SIZE);
-        this.rotation = rotation;
+        super(position, velocity, BULLET_SIZE, rotation);
     }
 
     @Override

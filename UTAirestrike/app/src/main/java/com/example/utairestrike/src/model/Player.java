@@ -3,12 +3,10 @@ package com.example.utairestrike.src.model;
 import com.example.utairestrike.src.utill.Vector2D;
 import java.lang.Math;
 public class Player extends GameObject {
-    private float rotation; // in degrees
     public static final float BULLET_SPEED = 5;
 
     public Player(Vector2D position, Vector2D velocity, Vector2D size, float rotation) {
-        super(position, velocity, size);
-        this.rotation = rotation;
+        super(position, velocity, size, rotation);
     }
 
     @Override

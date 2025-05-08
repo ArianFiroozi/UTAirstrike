@@ -65,4 +65,13 @@ public class GameEngine {
         handleEnemiesUpdate();
 
     }
+
+    public ArrayList<GameObject> getObjects (){
+        ArrayList<GameObject> objects = new ArrayList<>();
+        objects.add(player);
+        objects.addAll(bullets);
+        objects.addAll(buildings);
+        objects.addAll(enemies);
+        return objects;
+    }
 }

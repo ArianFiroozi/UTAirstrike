@@ -9,10 +9,13 @@ public abstract class GameObject {
     protected Vector2D velocity;
     protected Vector2D size;
 
-    public GameObject(Vector2D position, Vector2D velocity, Vector2D size) {
+    protected float rotation;
+
+    public GameObject(Vector2D position, Vector2D velocity, Vector2D size, float rotation) {
         this.position = position;
         this.velocity = velocity;
         this.size = size;
+        this.rotation = rotation;
     }
 
     public abstract void update(float deltaTime, Vector2D deltaVelocity, float rotationAngle);

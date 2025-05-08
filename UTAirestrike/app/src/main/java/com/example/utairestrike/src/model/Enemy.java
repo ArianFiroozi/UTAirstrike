@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import com.example.utairestrike.src.utill.Vector2D;
 public class Enemy extends GameObject {
     public Enemy(Vector2D position, Vector2D velocity, Vector2D size) {
-        super(position, velocity, size);
+        super(position, velocity, size, 0);
     }
 
     @Override
