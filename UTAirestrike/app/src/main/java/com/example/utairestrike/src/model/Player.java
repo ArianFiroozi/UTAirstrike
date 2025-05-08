@@ -4,9 +4,22 @@ import com.example.utairestrike.src.utill.Vector2D;
 import java.lang.Math;
 public class Player extends GameObject {
     public static final float BULLET_SPEED = 5;
+    private static Vector2D canvasSize ;
 
-    public Player(Vector2D position, Vector2D velocity, Vector2D size, float rotation) {
+    public Player(Vector2D position, Vector2D velocity, Vector2D size, float rotation, Vector2D canvasSize) {
         super(position, velocity, size, rotation);
+        Player.canvasSize = canvasSize;
+    }
+
+    public void takeBackToGameCanvas(){
+        if (this.position.getX() < 0 )
+            this.position.setX(0);
+        else if (this.position.getX() > canvasSize.getX())
+            this.position.setX(canvasSize.getX());
+        if (this.position.getY() < 0)
+            this.position.setY(0);
+        else if (this.position.getY() > canvasSize.getY())
+            this.position.setY(canvasSize.getY());
     }
 
     @Override
@@ -14,6 +27,7 @@ public class Player extends GameObject {
         velocity.add(deltaVelocity);
         rotation += rotationAngle;
         updatePosition(deltaTime);
+        takeBackToGameCanvas();
     }
 
     private Vector2D calculateShootingPosition(){

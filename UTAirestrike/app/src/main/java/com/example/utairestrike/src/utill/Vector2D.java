@@ -57,4 +57,12 @@ public class Vector2D {
         this.x *= deltaTime;
         this.y *= deltaTime;
     }
+
+    public void setX(float newX){
+        this.x = newX;
+    }
+
+    public void setY(float newY){
+        this.y = newY;
+    }
 }

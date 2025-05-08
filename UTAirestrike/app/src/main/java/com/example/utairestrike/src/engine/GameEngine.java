@@ -18,14 +18,16 @@ public class GameEngine {
     private static final ColissionDetector cd = new ColissionDetector();
     private static AircraftSpeed aircraftSpeedDelta ;
     private static ZonedDateTime  startingTime;
+    private static Vector2D canvasSize ;
     public static long gameDuration;
     public static boolean isWon;
     private static final float DELTA_TIME = 1;
 
-    public GameEngine(AircraftSpeed aircraftSpeedDelta){
+    public GameEngine(AircraftSpeed aircraftSpeedDelta, Vector2D canvasSize){
         GameEngine.aircraftSpeedDelta = aircraftSpeedDelta;
         gameDuration = -1;
         isWon = false;
+        GameEngine.canvasSize = canvasSize;
     }
 
     public void run(){
@@ -67,24 +69,28 @@ public class GameEngine {
         return false;
     }
 
+    private void removeLostBullets(){
+        Iterator<Bullet> iterator = bullets.iterator();
+        while (iterator.hasNext()) {
+            Bullet bullet = iterator.next();
+            if (!bullet.isInside(canvasSize))
+                iterator.remove();
+        }
+    }
+
     public boolean update(boolean shoot){
         player.update(DELTA_TIME, aircraftSpeedDelta.getVelocity(), aircraftSpeedDelta.getRotationDelta());
-
         for (Bullet bullet : bullets)
             bullet.update(DELTA_TIME, new Vector2D(), 0);
-
         if (shoot)
             player.shoot();
-
         boolean gameOver = false;
-
         gameOver = handleBuildingsUpdate();
         gameOver = (gameOver) ? gameOver : handleEnemiesUpdate();
+        removeLostBullets();
         if (enemies.isEmpty())
             isWon = true;
-
         gameDuration = Duration.between(startingTime, ZonedDateTime.now()).toMillis();
-
         return gameOver || isWon;
     }
 

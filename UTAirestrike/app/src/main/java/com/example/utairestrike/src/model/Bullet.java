@@ -14,4 +14,13 @@ public class Bullet extends GameObject {
     public void update(float deltaTime, Vector2D deltaVelocity, float rotationAngle) {
         updatePosition(deltaTime);
     }
+
+    public boolean isInside (Vector2D canvasSize){
+        boolean isInHorizentalBorder = this.position.getX() > 0 &&
+                this.position.getX() < canvasSize.getX();
+        boolean isInVerticalBorder = this.position.getY() > 0 &&
+                this.position.getY() < canvasSize.getY();
+
+        return isInHorizentalBorder && isInVerticalBorder;
+    }
 }
