@@ -52,4 +52,9 @@ public class Vector2D {
     public String toString() {
         return String.format("Vector2D(%.3f, %.3f)", x, y);
     }
+
+    public void multiply(float deltaTime) {
+        this.x *= deltaTime;
+        this.y *= deltaTime;
+    }
 }

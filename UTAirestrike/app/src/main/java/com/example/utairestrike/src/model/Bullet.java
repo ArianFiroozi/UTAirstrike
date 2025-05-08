@@ -4,17 +4,13 @@ import android.graphics.Canvas;
 import com.example.utairestrike.src.utill.Vector2D;
 
 public class Bullet extends GameObject {
+    public static Vector2D BULLET_SIZE = new Vector2D(1, 1);
     public Bullet(Vector2D position, Vector2D velocity) {
-        super(position, velocity);
+        super(position, velocity, BULLET_SIZE);
     }
 
     @Override
-    public void update(float deltaTime) {
-//        this.position = this.position.add(this.velocity.multiply(deltaTime));
-    }
-
-    @Override
-    public void draw(Canvas canvas) {
-        // TODO: draw a small circle or bullet sprite at position
+    public void update(float deltaTime, Vector2D deltaVelocity, float rotationAngle) {
+        updatePosition(deltaTime);
     }
 }
