@@ -1,6 +1,8 @@
 package com.example.utairestrike.src.engine;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -15,21 +17,26 @@ public class GameEngine {
     private static ArrayList <Building> buildings = new ArrayList<>();
     private static final ColissionDetector cd = new ColissionDetector();
     private static AircraftSpeed aircraftSpeedDelta ;
-    private static LocalDateTime startingTime;
+    private static ZonedDateTime  startingTime;
+    public static long gameDuration;
+    public static boolean isWon;
     private static final float DELTA_TIME = 1;
 
     public GameEngine(AircraftSpeed aircraftSpeedDelta){
         GameEngine.aircraftSpeedDelta = aircraftSpeedDelta;
+        gameDuration = -1;
+        isWon = false;
     }
 
     public void run(){
-        startingTime = LocalDateTime.now();
+        startingTime = ZonedDateTime.now();
+        // TODO: initialize the map;
     }
 
-    private void handleBuildingsUpdate(){
+    private boolean handleBuildingsUpdate(){
         for (Building building : buildings){
             if (cd.isCollide(building, player))
-                return ;//loose
+                return true;//loose
             Iterator<Bullet> iterator = bullets.iterator();
             while (iterator.hasNext()) {
                 Bullet bullet = iterator.next();
@@ -37,9 +44,10 @@ public class GameEngine {
                     iterator.remove();;
             }
         }
+        return false;
     }
 
-    private void handleEnemiesUpdate(){ // key assumption shut bullets will kill enemy and prevent aircraft collision
+    private boolean handleEnemiesUpdate(){ // key assumption shut bullets will kill enemy and prevent aircraft collision
         Iterator<Enemy> enemiesIterator = enemies.iterator();
         while (enemiesIterator.hasNext()){
             Enemy enemy = enemiesIterator.next();
@@ -53,12 +61,13 @@ public class GameEngine {
             }
 
             if (cd.isCollide(player, enemy)){
-                return; // loose
+                return true; // loose
             }
         }
+        return false;
     }
 
-    public void update(boolean shoot){
+    public boolean update(boolean shoot){
         player.update(DELTA_TIME, aircraftSpeedDelta.getVelocity(), aircraftSpeedDelta.getRotationDelta());
 
         for (Bullet bullet : bullets)
@@ -67,9 +76,16 @@ public class GameEngine {
         if (shoot)
             player.shoot();
 
-        handleBuildingsUpdate();
-        handleEnemiesUpdate();
+        boolean gameOver = false;
 
+        gameOver = handleBuildingsUpdate();
+        gameOver = (gameOver) ? gameOver : handleEnemiesUpdate();
+        if (enemies.isEmpty())
+            isWon = true;
+        
+        gameDuration = Duration.between(startingTime, ZonedDateTime.now()).toMillis();
+
+        return gameOver || isWon;
     }
 
     public ArrayList<GameObject> getObjects (){
