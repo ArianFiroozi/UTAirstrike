@@ -1,5 +1,6 @@
 package com.example.utairestrike.src.engine;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -14,10 +15,15 @@ public class GameEngine {
     private static ArrayList <Building> buildings = new ArrayList<>();
     private static final ColissionDetector cd = new ColissionDetector();
     private static AircraftSpeed aircraftSpeedDelta ;
+    private static LocalDateTime startingTime;
     private static final float DELTA_TIME = 1;
 
     public GameEngine(AircraftSpeed aircraftSpeedDelta){
         GameEngine.aircraftSpeedDelta = aircraftSpeedDelta;
+    }
+
+    public void run(){
+        startingTime = LocalDateTime.now();
     }
 
     private void handleBuildingsUpdate(){
