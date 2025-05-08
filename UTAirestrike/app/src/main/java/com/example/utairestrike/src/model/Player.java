@@ -32,7 +32,7 @@ public class Player extends GameObject {
     public Bullet shoot(){  //essential assumption is that the aircraft basit angle is the head to the right
         Vector2D bulletStartingPosition = calculateShootingPosition();
         Vector2D bulletVelocity = calculateBulletStartingVelocity();
-        return new Bullet(bulletStartingPosition, bulletVelocity);
+        return new Bullet(bulletStartingPosition, bulletVelocity, this.rotation);
     }
 
     // Rotation getter/setter
