@@ -7,7 +7,7 @@ public class PhoneSensors {
     }
 
     public AircraftSpeed getSpeed() {
-        AircraftSpeed speed = new AircraftSpeed(0, 0);
+        AircraftSpeed speed = new AircraftSpeed(0, 0, 0);
         return speed;
     }
 
