@@ -12,9 +12,9 @@ import com.example.utairestrike.src.utill.*;
 
 public class GameEngine {
     private Player player;
-    private static ArrayList <Bullet> bullets = new ArrayList<>();
-    private static ArrayList <Enemy> enemies = new ArrayList<>();
-    private static ArrayList <Building> buildings = new ArrayList<>();
+    private static final ArrayList <Bullet> bullets = new ArrayList<>();
+    private static final ArrayList <Enemy> enemies = new ArrayList<>();
+    private static final ArrayList <Building> buildings = new ArrayList<>();
     private static final ColissionDetector cd = new ColissionDetector();
     private static AircraftSpeed aircraftSpeedDelta ;
     private static ZonedDateTime  startingTime;
@@ -82,7 +82,7 @@ public class GameEngine {
         gameOver = (gameOver) ? gameOver : handleEnemiesUpdate();
         if (enemies.isEmpty())
             isWon = true;
-        
+
         gameDuration = Duration.between(startingTime, ZonedDateTime.now()).toMillis();
 
         return gameOver || isWon;
