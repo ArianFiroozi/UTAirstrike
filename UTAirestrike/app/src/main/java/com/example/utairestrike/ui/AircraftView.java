@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.utairestrike.R;
+import com.example.utairestrike.src.engine.GameEngine;
 import com.example.utairestrike.src.logic.actors.Aircraft;
 
 public class AircraftView extends View {
@@ -22,20 +23,16 @@ public class AircraftView extends View {
 
     private Handler handler;
     private Runnable updateRunnable;
-
+    private GameEngine engine;
     private static final long UPDATE_INTERVAL_MS = 100;
 
-    public AircraftView(Context context) {
+    public AircraftView(Context context, GameEngine engine) {
         super(context);
-        init();
+        init(engine);
     }
 
-    public AircraftView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    private void init() {
+    private void init(GameEngine engine) {
+        this.engine = engine;
         paint = new Paint();
         matrix = new Matrix();
         Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fighter);
@@ -71,9 +68,9 @@ public class AircraftView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        float x = Aircraft.X;
-        float y = Aircraft.Y;
-        float angle = Aircraft.angle;
+        float x = engine.getPlayer().getPosition().getX();
+        float y = engine.getPlayer().getPosition().getY();
+        float angle = engine.getPlayer().getRotation();
 
         matrix.reset();
         matrix.postTranslate(-aircraftBitmap.getWidth() / 2f, -aircraftBitmap.getHeight() / 2f);

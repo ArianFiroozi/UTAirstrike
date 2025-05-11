@@ -10,6 +10,9 @@ import com.example.utairestrike.src.hardware.AircraftSpeed;
 import com.example.utairestrike.src.model.*;
 import com.example.utairestrike.src.utill.*;
 
+import lombok.Getter;
+
+@Getter
 public class GameEngine {
     private Player player;
     private static final ArrayList <Bullet> bullets = new ArrayList<>();

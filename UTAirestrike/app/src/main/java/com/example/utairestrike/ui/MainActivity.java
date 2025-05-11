@@ -3,12 +3,18 @@ package com.example.utairestrike.ui;
 import android.os.Bundle;
 
 import com.example.utairestrike.R;
+import com.example.utairestrike.src.engine.GameEngine;
+import com.example.utairestrike.src.hardware.AircraftSpeed;
 import com.example.utairestrike.src.hardware.sensorWrapper.SensorConnector;
 import com.example.utairestrike.src.hardware.sensorWrapper.SensorListener;
+import com.example.utairestrike.src.model.GameObject;
+import com.example.utairestrike.src.model.Player;
+import com.example.utairestrike.src.utill.Vector2D;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -21,6 +27,9 @@ import com.example.utairestrike.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.FrameLayout;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SensorListener {
 
@@ -30,18 +39,32 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
     TextView xAccel, yAccel, zAccel;
     TextView xMagnet, yMagnet, zMagnet;
     TextView xGrav, yGrav, zGrav;
+    private GameEngine engine;
     private SensorConnector sensorConnector;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int screenWidth = displayMetrics.widthPixels;
+        int screenHeight = displayMetrics.heightPixels;
+        ArrayList<GameObject> objects = new ArrayList<GameObject>();
+        objects.add(new Player(new Vector2D(screenWidth, screenHeight)));
+        engine = new GameEngine(new AircraftSpeed(1,1,1), new Vector2D(screenWidth, screenHeight));
+        engine.run(objects);
+        AircraftView aircraftView = new AircraftView(this, engine);
+
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding.getRoot().addView(aircraftView);
         setContentView(binding.getRoot());
 
         sensorConnector = new SensorConnector(this);
         sensorConnector.setSensorUpdateListener(this);
+
+
+
 
         xGyro = findViewById(R.id.XGyroscope);
         yGyro = findViewById(R.id.YGyroscope);
@@ -59,13 +82,6 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         yGrav = findViewById(R.id.Ygravity);
         zGrav = findViewById(R.id.Zgravity);
 
-
-//        setSupportActionBar(binding.toolbar);
-//
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-//        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,6 +89,13 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
                 Snackbar.make(view, "Calibrating... Please keep the phone still", Snackbar.LENGTH_SHORT)
                         .setAnchorView(R.id.fab)
                         .show();
+            }
+        });
+
+        binding.fireButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                engine.getPlayer().shoot();
             }
         });
     }
