@@ -119,8 +119,8 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
                 if (running) {
                     seconds++;
                     handler.postDelayed(this, 1000); // delay 1 second
-                    if(seconds == 10){  //for test
-                        showVictoryPopup(seconds);
+                    if(seconds == 5){  //for test
+                        showPopup(seconds, false);
                     }
                     if(seconds == 1800) {
                         running = false;
@@ -130,15 +130,21 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         });
     }
 
-    private void showVictoryPopup(int timeSeconds) {
+    private void showPopup(int timeSeconds ,boolean IsWin) {
         View popupView = getLayoutInflater().inflate(R.layout.popup_layout, null);
 
         TextView title = popupView.findViewById(R.id.popupText);
         TextView time = popupView.findViewById(R.id.popupTime);
         Button closeButton = popupView.findViewById(R.id.closeButton);
+        if (IsWin){
+            title.setText("Victory");
+            time.setText("TIME: " + timeSeconds + " SECONDS");
+        }
+        else{
+            title.setText("Game Over");
+            time.setText(" ");
+        }
 
-        title.setText("Victory");
-        time.setText("TIME: " + timeSeconds + " SECONDS");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(popupView);
         builder.setCancelable(false); // prevent closing by tapping outside
