@@ -64,12 +64,12 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         engine.run(objects);
         AircraftView aircraftView = new AircraftView(this, engine);
         BuildingView buildingView = new BuildingView(this, engine);
-
+        EnemyView enemyView = new EnemyView(this,engine);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         binding.getRoot().addView(aircraftView);
         binding.getRoot().addView(buildingView);
-
+        binding.getRoot().addView(enemyView);
 
         setContentView(binding.getRoot());
 
