@@ -85,12 +85,7 @@ public class GameEngine {
     }
 
     private void removeLostBullets(){
-        Iterator<Bullet> iterator = bullets.iterator();
-        while (iterator.hasNext()) {
-            Bullet bullet = iterator.next();
-            if (!bullet.isInside(canvasSize))
-                iterator.remove();
-        }
+        bullets.removeIf(bullet -> !bullet.isInside(canvasSize));
     }
 
     public boolean update(boolean shoot){
