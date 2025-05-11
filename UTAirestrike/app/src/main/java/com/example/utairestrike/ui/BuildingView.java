@@ -26,9 +26,27 @@ public class BuildingView extends View {
 
     public BuildingView(Context context, GameEngine engine) {
         super(context);
-//        init(engine);
+        init(engine);
     }
 
 
+    private void init(GameEngine engine) {
+        this.engine = engine;
+        paint = new Paint();
+        matrix = new Matrix();
+        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.building);
+        int desiredWidth = 100;
+        int desiredHeight = 100;
+        buildingBitmap = Bitmap.createScaledBitmap(originalBitmap, desiredWidth, desiredHeight, true);
 
+        handler = new Handler(Looper.getMainLooper());
+        updateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                //Building.update(null,null,null);
+                invalidate();
+                handler.postDelayed(this, UPDATE_INTERVAL_MS);
+            }
+        };
+    }
 }

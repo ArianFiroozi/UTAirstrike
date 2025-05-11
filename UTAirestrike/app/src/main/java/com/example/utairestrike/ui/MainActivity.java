@@ -63,9 +63,14 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         engine = new GameEngine(new AircraftSpeed(0,0,0), new Vector2D(screenWidth, screenHeight));
         engine.run(objects);
         AircraftView aircraftView = new AircraftView(this, engine);
+        BuildingView buildingView = new BuildingView(this, engine);
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         binding.getRoot().addView(aircraftView);
+        binding.getRoot().addView(buildingView);
+
+
         setContentView(binding.getRoot());
 
         sensorConnector = new SensorConnector(this);

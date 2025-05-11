@@ -10,7 +10,7 @@ public class Building extends GameObject {
 
     @Override
     public void update(float deltaTime, Vector2D deltaVelocity, float rotationAngle) {
-        return ;
+        return  ;
     }
 
 
