@@ -3,7 +3,11 @@ package com.example.utairestrike.src.model;
 import android.graphics.Canvas;
 import com.example.utairestrike.src.utill.Vector2D;
 
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public abstract class GameObject {
     protected Vector2D position;
     protected Vector2D velocity;
@@ -25,14 +29,4 @@ public abstract class GameObject {
         delta.multiply(deltaTime);
         this.position.add(delta);
     }
-
-
-
-    // Getters and setters
-    public Vector2D getPosition() { return position; }
-    public void setPosition(Vector2D position) { this.position = position; }
-    public Vector2D getVelocity() { return velocity; }
-    public void setVelocity(Vector2D velocity) { this.velocity = velocity; }
-
-    public Vector2D getSize() { return this.size; }
 }

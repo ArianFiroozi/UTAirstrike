@@ -30,9 +30,24 @@ public class GameEngine {
         GameEngine.canvasSize = canvasSize;
     }
 
-    public void run(){
+    public void run(ArrayList<GameObject> map){
         startingTime = ZonedDateTime.now();
-        // TODO: initialize the map;
+        for (GameObject object : map) {
+            if (object instanceof Enemy) {
+                enemies.add((Enemy) object);
+            }
+            else if (object instanceof Bullet) {
+                bullets.add((Bullet) object);
+            }
+            else if (object instanceof Building) {
+                buildings.add((Building) object);
+            }
+            else if (object instanceof Player) {
+                player = (Player) object;
+            }
+            else
+                System.out.println("arian ride");
+        }
     }
 
     private boolean handleBuildingsUpdate(){
