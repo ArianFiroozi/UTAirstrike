@@ -1,6 +1,5 @@
 package com.example.utairestrike.src.engine;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -57,12 +56,7 @@ public class GameEngine {
         for (Building building : buildings){
             if (cd.isCollide(building, player))
                 return true;//loose
-            Iterator<Bullet> iterator = bullets.iterator();
-            while (iterator.hasNext()) {
-                Bullet bullet = iterator.next();
-                if (cd.isCollide(building, bullet))
-                    iterator.remove();;
-            }
+            bullets.removeIf(bullet -> cd.isCollide(building, bullet));
         }
         return false;
     }

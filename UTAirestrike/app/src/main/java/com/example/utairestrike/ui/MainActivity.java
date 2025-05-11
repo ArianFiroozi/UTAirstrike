@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
@@ -55,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         engine.run(objects);
         AircraftView aircraftView = new AircraftView(this, engine);
 
-        super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         binding.getRoot().addView(aircraftView);
         setContentView(binding.getRoot());
@@ -63,24 +64,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         sensorConnector = new SensorConnector(this);
         sensorConnector.setSensorUpdateListener(this);
 
-
-
-
-        xGyro = findViewById(R.id.XGyroscope);
-        yGyro = findViewById(R.id.YGyroscope);
-        zGyro = findViewById(R.id.ZGyroscope);
-
-        xAccel = findViewById(R.id.XAccelerometer);
-        yAccel = findViewById(R.id.YAccelerometer);
-        zAccel = findViewById(R.id.ZAccelerometer);
-
-        xMagnet = findViewById(R.id.XMagnet);
-        yMagnet = findViewById(R.id.YMagnet);
-        zMagnet = findViewById(R.id.ZMagnet);
-
-        xGrav = findViewById(R.id.Xgravity);
-        yGrav = findViewById(R.id.Ygravity);
-        zGrav = findViewById(R.id.Zgravity);
+        setSensorDisplay();
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +82,24 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
                 engine.shoot();
             }
         });
+    }
+
+    private void setSensorDisplay() {
+        xGyro = findViewById(R.id.XGyroscope);
+        yGyro = findViewById(R.id.YGyroscope);
+        zGyro = findViewById(R.id.ZGyroscope);
+
+        xAccel = findViewById(R.id.XAccelerometer);
+        yAccel = findViewById(R.id.YAccelerometer);
+        zAccel = findViewById(R.id.ZAccelerometer);
+
+        xMagnet = findViewById(R.id.XMagnet);
+        yMagnet = findViewById(R.id.YMagnet);
+        zMagnet = findViewById(R.id.ZMagnet);
+
+        xGrav = findViewById(R.id.Xgravity);
+        yGrav = findViewById(R.id.Ygravity);
+        zGrav = findViewById(R.id.Zgravity);
     }
 
     @Override
