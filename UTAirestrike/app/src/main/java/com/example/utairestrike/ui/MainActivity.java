@@ -76,10 +76,13 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
             }
         });
 
-        binding.fireButton.setOnClickListener(new View.OnClickListener() {
+        binding.shoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 engine.shoot();
+//                Snackbar.make(view, "shot", Snackbar.LENGTH_SHORT)
+//                        .setAnchorView(R.id.shoot)
+//                        .show();
             }
         });
     }

@@ -100,7 +100,7 @@ public class GameEngine {
     }
 
     public void shoot() {
-        getObjects().add(player.shoot());
+        bullets.add(player.shoot());
     }
 
     public ArrayList<GameObject> getObjects (){

@@ -1,5 +1,6 @@
 package com.example.utairestrike.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,7 @@ import android.view.View;
 import com.example.utairestrike.R;
 import com.example.utairestrike.src.engine.GameEngine;
 import com.example.utairestrike.src.logic.actors.Aircraft;
+import com.example.utairestrike.src.model.Bullet;
 
 public class AircraftView extends View {
 
@@ -64,6 +66,7 @@ public class AircraftView extends View {
         handler.removeCallbacks(updateRunnable);
     }
 
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -77,6 +80,23 @@ public class AircraftView extends View {
         matrix.postTranslate(-aircraftBitmap.getWidth() / 2f, -aircraftBitmap.getHeight() / 2f);
         matrix.postRotate(angle);
         matrix.postTranslate(x, y);
+
+        for (Object bullet : engine.getObjects())
+            if (bullet instanceof Bullet) {
+                Bitmap bulletBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fighter);
+                int width = 10;
+                int height = 10;
+                bulletBitmap = Bitmap.createScaledBitmap(bulletBitmap, width, height, true);
+
+
+                Matrix bulletMatrix = new Matrix();
+                bulletMatrix.postTranslate(-bulletBitmap.getWidth() / 2f, -bulletBitmap.getHeight() / 2f);
+                bulletMatrix.postTranslate(((Bullet) bullet).getPosition().getX(),
+                        ((Bullet) bullet).getPosition().getY());
+
+                canvas.drawBitmap(bulletBitmap, bulletMatrix, paint);
+            }
+
 
         canvas.drawBitmap(aircraftBitmap, matrix, paint);
     }
