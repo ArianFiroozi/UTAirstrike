@@ -65,16 +65,16 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 //        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-//
-//        binding.fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                sensorConnector.startCalibration();
-//                Snackbar.make(view, "Calibrating... Please keep the phone still", Snackbar.LENGTH_SHORT)
-//                        .setAnchorView(R.id.fab)
-//                        .show();
-//            }
-//        });
+
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sensorConnector.startCalibration();
+                Snackbar.make(view, "Calibrating... Please keep the phone still", Snackbar.LENGTH_SHORT)
+                        .setAnchorView(R.id.fab)
+                        .show();
+            }
+        });
     }
 
     @Override
