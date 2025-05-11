@@ -13,6 +13,7 @@ import com.example.utairestrike.src.model.Player;
 import com.example.utairestrike.src.utill.Vector2D;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.DisplayMetrics;
@@ -27,6 +28,7 @@ import com.example.utairestrike.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.FrameLayout;
 
@@ -117,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
                 if (running) {
                     seconds++;
                     handler.postDelayed(this, 1000); // delay 1 second
+                    if(seconds == 10){  //for test
+                        showVictoryPopup(seconds);
+                    }
                     if(seconds == 1800) {
                         running = false;
                     }
@@ -124,6 +129,26 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
             }
         });
     }
+
+    private void showVictoryPopup(int timeSeconds) {
+        View popupView = getLayoutInflater().inflate(R.layout.popup_layout, null);
+
+        TextView title = popupView.findViewById(R.id.popupText);
+        TextView time = popupView.findViewById(R.id.popupTime);
+        Button closeButton = popupView.findViewById(R.id.closeButton);
+
+        title.setText("Victory");
+        time.setText("TIME: " + timeSeconds + " SECONDS");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(popupView);
+        builder.setCancelable(false); // prevent closing by tapping outside
+
+        AlertDialog dialog = builder.create();
+
+        closeButton.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
 
     private void setSensorDisplay() {
         xGyro = findViewById(R.id.XGyroscope);
