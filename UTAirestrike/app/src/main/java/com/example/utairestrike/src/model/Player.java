@@ -44,7 +44,7 @@ public class Player extends GameObject {
 
     private Vector2D calculateBulletStartingVelocity(){
         return new Vector2D((float) (BULLET_SPEED * Math.sin(rotation)),
-                (float) (BULLET_SPEED * Math.cos(rotation)));
+                -(float) (BULLET_SPEED * Math.cos(rotation)));
     }
 
     public Bullet shoot(){  //essential assumption is that the aircraft basit angle is the head to the right
