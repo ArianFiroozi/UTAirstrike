@@ -11,7 +11,7 @@
 
 
     <TextView
-        android:id="@+id/timeCounter"
+        android:id="@+id/textViewTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Time: 0:10"

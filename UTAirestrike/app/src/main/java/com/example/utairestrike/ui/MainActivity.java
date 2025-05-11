@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
+import android.os.Handler;
 
 public class MainActivity extends AppCompatActivity implements SensorListener {
 
@@ -41,6 +42,11 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
     TextView xGrav, yGrav, zGrav;
     private GameEngine engine;
     private SensorConnector sensorConnector;
+
+    private TextView textViewTimer;
+    private int seconds = 0;
+    private boolean running = false;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +89,32 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 //                Snackbar.make(view, "shot", Snackbar.LENGTH_SHORT)
 //                        .setAnchorView(R.id.shoot)
 //                        .show();
+            }
+        });
+
+        textViewTimer = findViewById(R.id.textViewTimer);
+        running = true;
+        startTimer();
+
+    }
+
+    private void startTimer() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                int minutes = seconds / 60;
+                int secs = seconds % 60;
+
+                // Format as mm:ss
+                textViewTimer.setText(String.format("%02d:%02d", minutes, secs));
+
+                if (running) {
+                    seconds++;
+                    handler.postDelayed(this, 1000); // delay 1 second
+                    if(seconds == 1800) {
+                        running = false;
+                    }
+                }
             }
         });
     }
@@ -189,5 +221,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         super.onPause();
         sensorConnector.unregisterSensors();
     }
+
+
 
 }
