@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         int screenHeight = displayMetrics.heightPixels;
         ArrayList<GameObject> objects = new ArrayList<GameObject>();
         objects.add(new Player(new Vector2D(screenWidth, screenHeight)));
-        engine = new GameEngine(new AircraftSpeed(1,1,0), new Vector2D(screenWidth, screenHeight));
+        engine = new GameEngine(new AircraftSpeed(0,0,0), new Vector2D(screenWidth, screenHeight));
         engine.run(objects);
         AircraftView aircraftView = new AircraftView(this, engine);
 
@@ -145,11 +145,19 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
     @Override
     public void onGyroscopeUpdate(float x, float y, float z) {
+        Vector2D kir = new Vector2D(x*5, y*5);
+        float kos = z*100;
+        engine.player.setVelocity(kir);
+        engine.player.setRotation(kos);
+        GameEngine.aircraftSpeedDelta = new AircraftSpeed(x*5, y*5, z*10);
+//        engine.player.update();
+        engine.update();
         runOnUiThread(() -> {
             xGyro.setText("X: " + x);
             yGyro.setText("Y: " + y);
             zGyro.setText("Z: " + z);
         });
+        System.out.println("kiram tu kargahi");
     }
 
     @Override

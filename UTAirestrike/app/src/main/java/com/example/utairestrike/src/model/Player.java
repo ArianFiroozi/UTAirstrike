@@ -12,7 +12,7 @@ public class Player extends GameObject {
     }
 
     public Player(Vector2D canvasSize) {
-        super(new Vector2D(canvasSize.getX()/2, canvasSize.getY()/2), new Vector2D(1,1),
+        super(new Vector2D(canvasSize.getX()/2, canvasSize.getY()/2), new Vector2D(0,0),
                 new Vector2D(100,100), 0);
         Player.canvasSize = canvasSize;
     }

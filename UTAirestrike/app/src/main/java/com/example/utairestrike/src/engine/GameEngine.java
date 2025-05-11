@@ -10,15 +10,17 @@ import com.example.utairestrike.src.model.*;
 import com.example.utairestrike.src.utill.*;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class GameEngine {
-    private Player player;
+    public Player player;
     private static final ArrayList <Bullet> bullets = new ArrayList<>();
     private static final ArrayList <Enemy> enemies = new ArrayList<>();
     private static final ArrayList <Building> buildings = new ArrayList<>();
     private static final ColissionDetector cd = new ColissionDetector();
-    private static AircraftSpeed aircraftSpeedDelta ;
+    public static AircraftSpeed aircraftSpeedDelta ;
     private static ZonedDateTime  startingTime;
     private static Vector2D canvasSize ;
     public static long gameDuration;
