@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         int screenHeight = displayMetrics.heightPixels;
         ArrayList<GameObject> objects = new ArrayList<GameObject>();
         objects.add(new Player(new Vector2D(screenWidth, screenHeight)));
-        engine = new GameEngine(new AircraftSpeed(1,1,1), new Vector2D(screenWidth, screenHeight));
+        engine = new GameEngine(new AircraftSpeed(1,1,0), new Vector2D(screenWidth, screenHeight));
         engine.run(objects);
         AircraftView aircraftView = new AircraftView(this, engine);
 
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         binding.fireButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                engine.getPlayer().shoot();
+                engine.shoot();
             }
         });
     }

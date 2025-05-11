@@ -67,6 +67,7 @@ public class AircraftView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        engine.update();
 
         float x = engine.getPlayer().getPosition().getX();
         float y = engine.getPlayer().getPosition().getY();

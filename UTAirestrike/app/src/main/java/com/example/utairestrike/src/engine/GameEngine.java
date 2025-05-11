@@ -91,12 +91,10 @@ public class GameEngine {
         bullets.removeIf(bullet -> !bullet.isInside(canvasSize));
     }
 
-    public boolean update(boolean shoot){
+    public boolean update(){
         player.update(DELTA_TIME, aircraftSpeedDelta.getVelocity(), aircraftSpeedDelta.getRotationDelta());
         for (Bullet bullet : bullets)
             bullet.update(DELTA_TIME, new Vector2D(), 0);
-        if (shoot)
-            player.shoot();
         boolean gameOver = false;
         gameOver = handleBuildingsUpdate();
         gameOver = (gameOver) ? gameOver : handleEnemiesUpdate();
@@ -105,6 +103,10 @@ public class GameEngine {
             isWon = true;
         gameDuration = Duration.between(startingTime, ZonedDateTime.now()).toMillis();
         return gameOver || isWon;
+    }
+
+    public void shoot() {
+        getObjects().add(player.shoot());
     }
 
     public ArrayList<GameObject> getObjects (){
