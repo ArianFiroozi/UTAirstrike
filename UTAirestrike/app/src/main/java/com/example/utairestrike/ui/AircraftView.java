@@ -38,7 +38,7 @@ public class AircraftView extends View {
     private void init() {
         paint = new Paint();
         matrix = new Matrix();
-        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fighter_jet);
+        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fighter);
         int desiredWidth = 100;
         int desiredHeight = 100;
         aircraftBitmap = Bitmap.createScaledBitmap(originalBitmap, desiredWidth, desiredHeight, true);
