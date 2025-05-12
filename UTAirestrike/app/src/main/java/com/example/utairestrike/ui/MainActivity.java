@@ -9,6 +9,7 @@ import com.example.utairestrike.src.hardware.AircraftSpeed;
 import com.example.utairestrike.src.hardware.sensorWrapper.SensorConnector;
 import com.example.utairestrike.src.hardware.sensorWrapper.SensorListener;
 import com.example.utairestrike.src.model.Building;
+import com.example.utairestrike.src.model.Enemy;
 import com.example.utairestrike.src.model.GameObject;
 import com.example.utairestrike.src.model.Player;
 import com.example.utairestrike.src.utill.Vector2D;
@@ -115,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         int BUILDING_SIZE=200;
         gameObjects.add(new Building(new Vector2D((float) BUILDING_SIZE/2,BUILDING_SIZE*2), new Vector2D(BUILDING_SIZE, BUILDING_SIZE)));
         gameObjects.add(new Building(new Vector2D(screenWidth-BUILDING_SIZE/2,screenHeight-BUILDING_SIZE*2), new Vector2D(BUILDING_SIZE, BUILDING_SIZE)));
+
+        gameObjects.add(new Enemy(new Vector2D(screenWidth-BUILDING_SIZE/2,screenHeight-BUILDING_SIZE*3), new Vector2D(0,0), new Vector2D(BUILDING_SIZE/2, BUILDING_SIZE/2)));
 
         var gameEngine = new GameEngine(new AircraftSpeed(0, 0, 0), new Vector2D(screenWidth, screenHeight));
         gameEngine.run(gameObjects);

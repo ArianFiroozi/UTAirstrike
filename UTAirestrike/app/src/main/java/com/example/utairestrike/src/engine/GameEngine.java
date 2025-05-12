@@ -65,19 +65,25 @@ public class GameEngine {
 
     private boolean handleEnemiesUpdate(){ // key assumption shut bullets will kill enemy and prevent aircraft collision
         Iterator<Enemy> enemiesIterator = enemies.iterator();
-        while (enemiesIterator.hasNext()){
+        while (enemiesIterator.hasNext()) {
             Enemy enemy = enemiesIterator.next();
+            boolean removeEnemy = false;
+
             Iterator<Bullet> iterator = bullets.iterator();
             while (iterator.hasNext()) {
                 Bullet bullet = iterator.next();
                 if (cd.isCollide(enemy, bullet)) {
-                    iterator.remove();
-                    enemiesIterator.remove();
+                    iterator.remove();  // Safe removal
+                    removeEnemy = true; // Mark enemy for removal
                 }
             }
 
-            if (cd.isCollide(player, enemy)){
-                return true; // loose
+            if (removeEnemy) {
+                enemiesIterator.remove(); // Remove enemy safely
+            }
+
+            if (cd.isCollide(player, enemy)) {
+                return true; // Lose condition
             }
         }
         return false;

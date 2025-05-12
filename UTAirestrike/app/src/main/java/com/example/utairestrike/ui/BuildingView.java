@@ -58,17 +58,6 @@ public class BuildingView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-//        engine.update();
-
-//        float x = engine.getPlayer().getPosition().getX();
-//        float y = engine.getPlayer().getPosition().getY();
-//        float angle = engine.getPlayer().getRotation();
-//
-//        matrix.reset();
-//        matrix.postTranslate(-aircraftBitmap.getWidth() / 2f, -aircraftBitmap.getHeight() / 2f);
-//        matrix.postRotate(angle);
-//        matrix.postTranslate(x, y);
-
         for (Object building : engine.getObjects())
             if (building instanceof Building) {
                 Bitmap buildingBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.building);
@@ -84,8 +73,5 @@ public class BuildingView extends View {
 
                 canvas.drawBitmap(buildingBitmap, buildingMatrix, paint);
             }
-
-
-//        canvas.drawBitmap(aircraftBitmap, matrix, paint);
     }
 }

@@ -1,8 +1,10 @@
 package com.example.utairestrike.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Handler;
@@ -11,6 +13,7 @@ import android.view.View;
 
 import com.example.utairestrike.R;
 import com.example.utairestrike.src.engine.GameEngine;
+import com.example.utairestrike.src.model.Enemy;
 
 public class EnemyView extends View {
 
@@ -33,7 +36,7 @@ public class EnemyView extends View {
         this.engine = engine;
         paint = new Paint();
         matrix = new Matrix();
-        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.building);
+        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
         int desiredWidth = 100;
         int desiredHeight = 100;
         EnemyBitmap = Bitmap.createScaledBitmap(originalBitmap, desiredWidth, desiredHeight, true);
@@ -42,10 +45,32 @@ public class EnemyView extends View {
         updateRunnable = new Runnable() {
             @Override
             public void run() {
-                //Building.update(null,null,null);
                 invalidate();
                 handler.postDelayed(this, UPDATE_INTERVAL_MS);
             }
         };
+    }
+
+    @SuppressLint("DrawAllocation")
+    @Override
+    protected void onDraw(Canvas canvas) {
+        engine.update();
+        System.out.println(engine.getObjects());
+        super.onDraw(canvas);
+        for (Object enemy : engine.getObjects())
+            if (enemy instanceof Enemy) {
+                Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
+                int width = (int) ((Enemy) enemy).getSize().getX();
+                int height = (int) ((Enemy) enemy).getSize().getY();
+                enemyBitmap = Bitmap.createScaledBitmap(enemyBitmap, width, height, true);
+
+
+                Matrix enemyMatrix = new Matrix();
+                enemyMatrix.postTranslate(-enemyBitmap.getWidth() / 2f, -enemyBitmap.getHeight() / 2f);
+                enemyMatrix.postTranslate(((Enemy) enemy).getPosition().getX(),
+                        ((Enemy) enemy).getPosition().getY());
+
+                canvas.drawBitmap(enemyBitmap, enemyMatrix, paint);
+            }
     }
 }
