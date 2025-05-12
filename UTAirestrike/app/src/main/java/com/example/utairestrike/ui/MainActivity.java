@@ -8,11 +8,13 @@ import com.example.utairestrike.src.engine.GameEngine;
 import com.example.utairestrike.src.hardware.AircraftSpeed;
 import com.example.utairestrike.src.hardware.sensorWrapper.SensorConnector;
 import com.example.utairestrike.src.hardware.sensorWrapper.SensorListener;
+import com.example.utairestrike.src.model.Building;
 import com.example.utairestrike.src.model.GameObject;
 import com.example.utairestrike.src.model.Player;
 import com.example.utairestrike.src.utill.Vector2D;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         int screenHeight = displayMetrics.heightPixels;
         ArrayList<GameObject> objects = new ArrayList<GameObject>();
         objects.add(new Player(new Vector2D(screenWidth, screenHeight)));
-        engine = new GameEngine(new AircraftSpeed(0,0,0), new Vector2D(screenWidth, screenHeight));
+        engine = initEngine(screenWidth, screenHeight);
         engine.run(objects);
         AircraftView aircraftView = new AircraftView(this, engine);
         BuildingView buildingView = new BuildingView(this, engine);
@@ -104,6 +106,19 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         running = true;
         startTimer();
 
+    }
+
+    @NonNull
+    private static
+    GameEngine initEngine(int screenWidth, int screenHeight) {
+        ArrayList<GameObject> gameObjects = new ArrayList<>();
+        int BUILDING_SIZE=200;
+        gameObjects.add(new Building(new Vector2D((float) BUILDING_SIZE/2,BUILDING_SIZE*2), new Vector2D(BUILDING_SIZE, BUILDING_SIZE)));
+        gameObjects.add(new Building(new Vector2D(screenWidth-BUILDING_SIZE/2,screenHeight-BUILDING_SIZE*2), new Vector2D(BUILDING_SIZE, BUILDING_SIZE)));
+
+        var gameEngine = new GameEngine(new AircraftSpeed(0, 0, 0), new Vector2D(screenWidth, screenHeight));
+        gameEngine.run(gameObjects);
+        return gameEngine;
     }
 
     private void startTimer() {
