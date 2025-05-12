@@ -24,7 +24,7 @@ public class EnemyView extends View {
     private Handler handler;
     private Runnable updateRunnable;
     private GameEngine engine;
-    private static final long UPDATE_INTERVAL_MS = 100;
+    private static final long UPDATE_INTERVAL_MS = 30;
 
     public EnemyView(Context context, GameEngine engine) {
         super(context);
@@ -49,13 +49,14 @@ public class EnemyView extends View {
                 handler.postDelayed(this, UPDATE_INTERVAL_MS);
             }
         };
+        updateRunnable.run();
     }
 
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
-        engine.update();
-        System.out.println(engine.getObjects());
+//        engine.update();
+        System.out.println("ENEMY SIZE: " + engine.getObjects().size());
         super.onDraw(canvas);
         for (Object enemy : engine.getObjects())
             if (enemy instanceof Enemy) {
@@ -63,7 +64,6 @@ public class EnemyView extends View {
                 int width = (int) ((Enemy) enemy).getSize().getX();
                 int height = (int) ((Enemy) enemy).getSize().getY();
                 enemyBitmap = Bitmap.createScaledBitmap(enemyBitmap, width, height, true);
-
 
                 Matrix enemyMatrix = new Matrix();
                 enemyMatrix.postTranslate(-enemyBitmap.getWidth() / 2f, -enemyBitmap.getHeight() / 2f);
