@@ -1,0 +1,5 @@
+type,pos_x,pos_y,size_x,size_y,vel_x,vel_y
+building,50,200,250,100,0,0
+building,750,400,250,100,0,0
+enemy,750,300,70,110,0,0
+enemy,750,250,70,110,0,0

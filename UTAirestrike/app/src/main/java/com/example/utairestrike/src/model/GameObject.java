@@ -1,6 +1,5 @@
 package com.example.utairestrike.src.model;
 
-import android.graphics.Canvas;
 import com.example.utairestrike.src.utill.Vector2D;
 
 import lombok.Getter;
@@ -14,12 +13,14 @@ public abstract class GameObject {
     protected Vector2D size;
 
     protected float rotation;
+    protected boolean isFlipped;
 
     public GameObject(Vector2D position, Vector2D velocity, Vector2D size, float rotation) {
         this.position = position;
         this.velocity = velocity;
         this.size = size;
         this.rotation = rotation;
+        this.isFlipped = false;
     }
 
     public abstract void update(float deltaTime, Vector2D deltaVelocity, float rotationAngle);
@@ -28,5 +29,9 @@ public abstract class GameObject {
         Vector2D delta = new Vector2D(this.velocity.getX(), this.velocity.getY());
         delta.multiply(deltaTime);
         this.position.add(delta);
+    }
+
+    public void flip(){
+        this.isFlipped = !this.isFlipped;
     }
 }

@@ -9,6 +9,7 @@ import com.example.utairestrike.src.hardware.AircraftSpeed;
 import com.example.utairestrike.src.model.*;
 import com.example.utairestrike.src.utill.*;
 
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,23 +35,15 @@ public class GameEngine {
         GameEngine.canvasSize = canvasSize;
     }
 
-    public void run(ArrayList<GameObject> map){
+    public void run(String mapPath, Player player){
         startingTime = ZonedDateTime.now();
-        for (GameObject object : map) {
-            if (object instanceof Enemy) {
-                enemies.add((Enemy) object);
-            }
-            else if (object instanceof Bullet) {
-                bullets.add((Bullet) object);
-            }
-            else if (object instanceof Building) {
-                buildings.add((Building) object);
-            }
-            else if (object instanceof Player) {
-                player = (Player) object;
-            }
-            else
-                System.out.println("arian ride");
+        this.player = player;
+        ArrayList<GameObject> map = MapLoader.loadFromCSVFile(mapPath);
+        for (GameObject object : map){
+            if (object instanceof Building)
+                buildings.add((Building) (object));
+            else if (object instanceof Enemy)
+                enemies.add((Enemy) (object));
         }
     }
 
