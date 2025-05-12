@@ -1,8 +1,10 @@
 package com.example.utairestrike.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Handler;
@@ -11,10 +13,11 @@ import android.view.View;
 
 import com.example.utairestrike.R;
 import com.example.utairestrike.src.engine.GameEngine;
+import com.example.utairestrike.src.model.Bullet;
 
 public class EnemyView extends View {
 
-    private Bitmap EnemyBitmap;
+    private Bitmap enemyBitmap;
     private Paint paint;
     private Matrix matrix;
 
@@ -36,7 +39,7 @@ public class EnemyView extends View {
         Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.building);
         int desiredWidth = 100;
         int desiredHeight = 100;
-        EnemyBitmap = Bitmap.createScaledBitmap(originalBitmap, desiredWidth, desiredHeight, true);
+        enemyBitmap = Bitmap.createScaledBitmap(originalBitmap, desiredWidth, desiredHeight, true);
 
         handler = new Handler(Looper.getMainLooper());
         updateRunnable = new Runnable() {
@@ -48,4 +51,7 @@ public class EnemyView extends View {
             }
         };
     }
+
 }
+
+

@@ -13,6 +13,7 @@ import com.example.utairestrike.src.model.GameObject;
 import com.example.utairestrike.src.model.Player;
 import com.example.utairestrike.src.utill.Vector2D;
 import com.google.android.material.snackbar.Snackbar;
+import android.content.pm.ActivityInfo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -105,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         textViewTimer = findViewById(R.id.textViewTimer);
         running = true;
         startTimer();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
 
     }
 
