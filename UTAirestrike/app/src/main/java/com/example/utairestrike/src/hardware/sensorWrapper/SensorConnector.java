@@ -2,6 +2,7 @@ package com.example.utairestrike.src.hardware.sensorWrapper;
 
 import static android.hardware.Sensor.TYPE_GRAVITY;
 import static android.hardware.Sensor.TYPE_GYROSCOPE_UNCALIBRATED;
+import static android.hardware.Sensor.TYPE_GYROSCOPE;
 import static android.hardware.Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED;
 
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 public class SensorConnector implements SensorEventListener {
+    private final int GYROSCOPE_TYPE = TYPE_GYROSCOPE; // TODO: CHANGE THIS TO UNCAL
     private final SensorManager mSensorManager;
     private final Sensor mAccelerometer;
     private final Sensor mGyroscope;
@@ -50,7 +52,7 @@ public class SensorConnector implements SensorEventListener {
     public SensorConnector(Context context) {
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mGyroscope = mSensorManager.getDefaultSensor(TYPE_GYROSCOPE_UNCALIBRATED);
+        mGyroscope = mSensorManager.getDefaultSensor(GYROSCOPE_TYPE);
         mGravimeter = mSensorManager.getDefaultSensor(TYPE_GRAVITY);
         mMagnetometer = mSensorManager.getDefaultSensor(TYPE_MAGNETIC_FIELD_UNCALIBRATED);
 
@@ -105,7 +107,7 @@ public class SensorConnector implements SensorEventListener {
             if (type == Sensor.TYPE_ACCELEROMETER) {
                 System.arraycopy(values, 0, accelSamples[calibrationSampleIndex], 0, 3);
                 accTimestamps[calibrationSampleIndex] = currentTime;
-            } else if (type == TYPE_GYROSCOPE_UNCALIBRATED) {
+            } else if (type == GYROSCOPE_TYPE) {
                 System.arraycopy(values, 0, gyroSamples[calibrationSampleIndex], 0, 3);
                 gyroTimestamps[calibrationSampleIndex] = currentTime;
             } else if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED) {
@@ -133,7 +135,7 @@ public class SensorConnector implements SensorEventListener {
             lowPassFilter(values, filteredAccel);
             System.arraycopy(filteredAccel, 0, accel, 0, 3);
 
-        } else if (type == TYPE_GYROSCOPE_UNCALIBRATED) {
+        } else if (type == GYROSCOPE_TYPE) {
             values[0] -= gyroBias[0];
             values[1] -= gyroBias[1];
             values[2] -= gyroBias[2];
@@ -175,7 +177,7 @@ public class SensorConnector implements SensorEventListener {
         int type = sensor.getType();
         if (type == Sensor.TYPE_ACCELEROMETER)
             sensorListener.onAccelerometerUpdate(q[1], q[2], q[3]);
-        else if (type == TYPE_GYROSCOPE_UNCALIBRATED)
+        else if (type == GYROSCOPE_TYPE)
             sensorListener.onGyroscopeUpdate(values[0], values[1], values[2]);
         else if (type == Sensor.TYPE_GRAVITY)
             sensorListener.onGravimeterUpdate(values[0], values[1], values[2]);
