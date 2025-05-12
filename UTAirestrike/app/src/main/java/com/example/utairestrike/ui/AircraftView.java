@@ -83,7 +83,7 @@ public class AircraftView extends View {
 
         for (Object bullet : engine.getObjects())
             if (bullet instanceof Bullet) {
-                Bitmap bulletBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fighter);
+                Bitmap bulletBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bullet);
                 int width = 10;
                 int height = 10;
                 bulletBitmap = Bitmap.createScaledBitmap(bulletBitmap, width, height, true);

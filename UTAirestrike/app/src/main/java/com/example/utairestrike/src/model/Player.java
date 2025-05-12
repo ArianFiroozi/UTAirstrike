@@ -37,20 +37,20 @@ public class Player extends GameObject {
     }
 
     private Vector2D calculateShootingPosition(){
-        float x = (float) (this.position.getX() + (this.size.getX())/2 * Math.sin(rotation));
-        float y = (float) (this.position.getY() + (this.size.getX())/2 * Math.sin(rotation));
+        float x = (float) (this.position.getX() + (this.size.getX())/2 * Math.sin(Math.toRadians(rotation)));
+        float y = (float) (this.position.getY() - (this.size.getX())/2 * Math.cos(Math.toRadians(rotation)));
         return new Vector2D(x, y);
     }
 
     private Vector2D calculateBulletStartingVelocity(){
-        return new Vector2D((float) (BULLET_SPEED * Math.sin(rotation)),
-                -(float) (BULLET_SPEED * Math.cos(rotation)));
+        return new Vector2D((float) (BULLET_SPEED * Math.sin(Math.toRadians(rotation))), -(float)(BULLET_SPEED * Math.cos(Math.toRadians(rotation))));
     }
 
     public Bullet shoot(){  //essential assumption is that the aircraft basit angle is the head to the right
         Vector2D bulletStartingPosition = calculateShootingPosition();
         Vector2D bulletVelocity = calculateBulletStartingVelocity();
-        return new Bullet(bulletStartingPosition, bulletVelocity, this.rotation);
+        System.out.println("rotation is: " + rotation);
+        return new Bullet(bulletStartingPosition, bulletVelocity);
     }
 
     // Rotation getter/setter
