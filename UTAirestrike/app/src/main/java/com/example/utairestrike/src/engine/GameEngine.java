@@ -1,5 +1,7 @@
 package com.example.utairestrike.src.engine;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -35,10 +37,15 @@ public class GameEngine {
         GameEngine.canvasSize = canvasSize;
     }
 
-    public void run(String mapPath, Player player){
+    public void run(BufferedReader mapPath, Player player){
         startingTime = ZonedDateTime.now();
         this.player = player;
-        ArrayList<GameObject> map = MapLoader.loadFromCSVFile(mapPath);
+        ArrayList<GameObject> map;
+        try {
+            map = MapLoader.loadFromCSVFile(mapPath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         for (GameObject object : map){
             if (object instanceof Building)
                 buildings.add((Building) (object));

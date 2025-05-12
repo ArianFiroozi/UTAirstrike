@@ -1,7 +1,11 @@
 package com.example.utairestrike.ui;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 import com.example.utairestrike.R;
 import com.example.utairestrike.src.engine.GameEngine;
@@ -36,6 +40,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.FrameLayout;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import android.os.Handler;
 
@@ -65,10 +71,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
         int screenWidth = displayMetrics.widthPixels;
         int screenHeight = displayMetrics.heightPixels;
-        ArrayList<GameObject> objects = new ArrayList<GameObject>();
-        objects.add(new Player(new Vector2D(screenWidth, screenHeight)));
-        engine = initEngine(screenWidth, screenHeight);
-        engine.run(objects);
+        engine = initEngine(this, screenWidth, screenHeight);
         AircraftView aircraftView = new AircraftView(this, engine);
         BuildingView buildingView = new BuildingView(this, engine);
         EnemyView enemyView = new EnemyView(this,engine);
@@ -115,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
     @NonNull
     private static
-    GameEngine initEngine(int screenWidth, int screenHeight) {
+    GameEngine initEngine(Context context, int screenWidth, int screenHeight) {
         ArrayList<GameObject> gameObjects = new ArrayList<>();
         int BUILDING_SIZE=200;
 
@@ -125,10 +128,13 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         gameObjects.add(new Enemy(new Vector2D(screenWidth-BUILDING_SIZE/2,screenHeight-BUILDING_SIZE*3), new Vector2D(0,0), new Vector2D(70, 110)));
         gameObjects.add(new Enemy(new Vector2D(screenWidth-BUILDING_SIZE/2,250), new Vector2D(0,0), new Vector2D(70, 110)));
 
+        Player player = new Player(new Vector2D(screenWidth, screenHeight));
 
 
         var gameEngine = new GameEngine(new AircraftSpeed(0, 0, 0), new Vector2D(screenWidth, screenHeight));
-        gameEngine.run(gameObjects);
+        InputStream is = context.getResources().openRawResource(R.raw.main_map);
+        BufferedReader map = new BufferedReader(new InputStreamReader(is));
+        gameEngine.run(map, player);
         return gameEngine;
     }
 
@@ -145,8 +151,8 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
                 if (running) {
                     seconds++;
                     handler.postDelayed(this, 1000); // delay 1 second
-                    if(seconds == 5){  //for test
-                        showPopup(seconds, false);
+                    if(GameEngine.isWon){  //for test
+                        showPopup(seconds, true);
                     }
                     if(seconds == 1800) {
                         running = false;
