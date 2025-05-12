@@ -25,12 +25,14 @@ public class GameEngine {
     private static Vector2D canvasSize ;
     public static long gameDuration;
     public static boolean isWon;
+    public static boolean isLost;
     private static final float DELTA_TIME = 1;
 
     public GameEngine(AircraftSpeed aircraftSpeedDelta, Vector2D canvasSize){
         GameEngine.aircraftSpeedDelta = aircraftSpeedDelta;
         gameDuration = -1;
         isWon = false;
+        isLost = false;
         GameEngine.canvasSize = canvasSize;
     }
 
@@ -94,6 +96,9 @@ public class GameEngine {
     }
 
     public boolean update(){
+        if (isLost || isWon)
+            return true;
+
         player.update(DELTA_TIME, aircraftSpeedDelta.getVelocity(), aircraftSpeedDelta.getRotationDelta());
         for (Bullet bullet : bullets)
             bullet.update(DELTA_TIME, new Vector2D(), 0);
@@ -104,6 +109,7 @@ public class GameEngine {
         if (enemies.isEmpty())
             isWon = true;
         gameDuration = Duration.between(startingTime, ZonedDateTime.now()).toMillis();
+        isLost = gameOver;
         return gameOver || isWon;
     }
 

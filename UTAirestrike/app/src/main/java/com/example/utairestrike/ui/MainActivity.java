@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         textViewTimer = findViewById(R.id.textViewTimer);
         running = true;
         startTimer();
+        startGame();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
 
@@ -138,18 +139,35 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
             public void run() {
                 int minutes = seconds / 60;
                 int secs = seconds % 60;
-
-                // Format as mm:ss
+//                sleep
                 textViewTimer.setText(String.format("%02d:%02d", minutes, secs));
 
                 if (running) {
+                    engine.update();
                     seconds++;
                     handler.postDelayed(this, 1000); // delay 1 second
-                    if(seconds == 5){  //for test
-                        showPopup(seconds, false);
-                    }
                     if(seconds == 1800) {
                         running = false;
+                    }
+                }
+            }
+        });
+    }
+
+    private void startGame() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (running) {
+                    engine.update();
+                    handler.postDelayed(this, 10);
+                    if(GameEngine.isWon){
+                        running=false;
+                        showPopup(seconds, false);
+                    }
+                    else if(GameEngine.isLost){
+                        running=false;
+                        showPopup(seconds, false);
                     }
                 }
             }
@@ -242,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
     public void onGyroscopeUpdate(float x, float y, float z) {
         GameEngine.aircraftSpeedDelta = new AircraftSpeed(y*5, x*5, z*10);
 //        engine.player.update();
-        engine.update();
         runOnUiThread(() -> {
             xGyro.setText("X: " + x);
             yGyro.setText("Y: " + y);
