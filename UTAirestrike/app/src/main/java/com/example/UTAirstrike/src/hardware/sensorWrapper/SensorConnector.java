@@ -171,35 +171,30 @@ public class SensorConnector implements SensorEventListener {
             System.arraycopy(filteredMagnet, 0, magnet, 0, 3);
         }
 
-        float[] quat = new float[4];
-        if (accel != null && gyro != null && magnet != null) {
-            System.out.println(Arrays.toString(gyro));
-            mMadgwick.no_filter(gyro[0],gyro[1],gyro[2]);
-            var euler = mMadgwick.getEulerAngles();
-            System.out.println("euler Ang "+Arrays.toString(euler));
-        }
+
 
         values[0] = roundTo3Decimals(values[0]);
         values[1] = roundTo3Decimals(values[1]);
         values[2] = roundTo3Decimals(values[2]);
-        quat[0] = roundTo3Decimals(quat[0]);
-        quat[1] = roundTo3Decimals(quat[1]);
-        quat[2] = roundTo3Decimals(quat[2]);
-        quat[3] = roundTo3Decimals(quat[3]);
-
-        updateSensorListenerValues(sensorEvent.sensor, values, quat);
+        updateSensorListenerValues(sensorEvent.sensor, values);
     }
 
-    private void updateSensorListenerValues(Sensor sensor, float[] values, float[] q) {
+    private void updateSensorListenerValues(Sensor sensor, float[] values) {
         if (sensorListener == null) return;
 
         int type = sensor.getType();
         if (type == TYPE_ACCELEROMETER_UNCALIBRATED || type == Sensor.TYPE_ACCELEROMETER)
-            sensorListener.onAccelerometerUpdate(q[1], q[2], q[3]);
+            sensorListener.onAccelerometerUpdate(values[0], values[1], values[2]);
         else if (type == GYROSCOPE_TYPE)
             sensorListener.onGyroscopeUpdate(values[0], values[1], values[2]);
-        else if (type == TYPE_GRAVITY)
+        else if (type == TYPE_GRAVITY) {
+            float xA =(float) Math.atan(values[0]/Math.sqrt(values[1]*values[1] + values[2]*values[2]));
+            float YA =(float) Math.atan(values[1]/Math.sqrt(values[0]*values[0] + values[2]*values[2]));
+            float zA =(float) Math.atan(values[2]/Math.sqrt(values[1]*values[1] + values[0]*values[0]));
+
+            System.out.print("rool: "+ YA+ "picth" + xA + "\n" );
             sensorListener.onGravimeterUpdate(values[0], values[1], values[2]);
+        }
         else if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED || type == Sensor.TYPE_MAGNETIC_FIELD)
             sensorListener.onMagnetometerUpdate(values[0], values[1], values[2]);
     }
