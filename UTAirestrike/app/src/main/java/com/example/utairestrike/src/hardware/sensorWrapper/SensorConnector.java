@@ -191,9 +191,8 @@ public class SensorConnector implements SensorEventListener {
             float xA =(float) Math.atan(values[0]/Math.sqrt(values[1]*values[1] + values[2]*values[2]));
             float YA =(float) Math.atan(values[1]/Math.sqrt(values[0]*values[0] + values[2]*values[2]));
             float zA =(float) Math.atan(values[2]/Math.sqrt(values[1]*values[1] + values[0]*values[0]));
-            float pitch = (float) Math.atan2(-values[0], Math.sqrt(values[1]*values[1] + values[2]*values[2]));
-            float roll = (float) Math.atan2(values[1], values[2]);
-            System.out.print("rool: "+ roll+ "picth" + pitch + "\n" );
+
+            System.out.print("rool: "+ YA+ "picth" + xA + "\n" );
             sensorListener.onGravimeterUpdate(values[0], values[1], values[2]);
         }
         else if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED || type == Sensor.TYPE_MAGNETIC_FIELD)
