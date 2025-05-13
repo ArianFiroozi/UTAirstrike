@@ -2,17 +2,20 @@ package com.example.utairestrike.src.hardware.sensorWrapper;
 
 import static android.hardware.Sensor.TYPE_GRAVITY;
 import static android.hardware.Sensor.TYPE_GYROSCOPE_UNCALIBRATED;
-import static android.hardware.Sensor.TYPE_GYROSCOPE;
 import static android.hardware.Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED;
+import static android.hardware.Sensor.TYPE_ACCELEROMETER_UNCALIBRATED;
 
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
+
+import java.util.Arrays;
 
 public class SensorConnector implements SensorEventListener {
-    private final int GYROSCOPE_TYPE = TYPE_GYROSCOPE; // TODO: CHANGE THIS TO UNCAL
+    private final int GYROSCOPE_TYPE = TYPE_GYROSCOPE_UNCALIBRATED;
     private final SensorManager mSensorManager;
     private final Sensor mAccelerometer;
     private final Sensor mGyroscope;
@@ -26,7 +29,7 @@ public class SensorConnector implements SensorEventListener {
     private final long[] accTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
     private final long[] gyroTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
     private final long[] magnetTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
-    private final float filterBeta = 0.1f;
+    private final float filterBeta = 0.004f;
 
     private static final float ALPHA = 0.1f;
 
@@ -51,24 +54,32 @@ public class SensorConnector implements SensorEventListener {
 
     public SensorConnector(Context context) {
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mAccelerometer = mSensorManager.getDefaultSensor(TYPE_ACCELEROMETER_UNCALIBRATED);
+        } else {
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        }
+
         mGyroscope = mSensorManager.getDefaultSensor(GYROSCOPE_TYPE);
         mGravimeter = mSensorManager.getDefaultSensor(TYPE_GRAVITY);
-        mMagnetometer = mSensorManager.getDefaultSensor(TYPE_MAGNETIC_FIELD_UNCALIBRATED);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mMagnetometer = mSensorManager.getDefaultSensor(TYPE_MAGNETIC_FIELD_UNCALIBRATED);
+        } else {
+            mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        }
 
         sampleRate = magnetSampleRate = accSampleRate = gyroSampleRate = 0f;
-
         mMadgwick = new MadgwickAHRS(1);
     }
 
     private void lowPassFilter(float[] input, float[] output) {
         if (output == null) return;
-
         for (int i = 0; i < Math.min(input.length, output.length); i++) {
             output[i] = output[i] + ALPHA * (input[i] - output[i]);
         }
     }
-
 
     public void setSensorUpdateListener(SensorListener listener) {
         sensorListener = listener;
@@ -104,31 +115,31 @@ public class SensorConnector implements SensorEventListener {
 
         if (isCalibrating && calibrationSampleIndex < CALIBRATION_SAMPLE_COUNT) {
             long currentTime = System.nanoTime();
-            if (type == Sensor.TYPE_ACCELEROMETER) {
+            if (type == TYPE_ACCELEROMETER_UNCALIBRATED || type == Sensor.TYPE_ACCELEROMETER) {
                 System.arraycopy(values, 0, accelSamples[calibrationSampleIndex], 0, 3);
                 accTimestamps[calibrationSampleIndex] = currentTime;
             } else if (type == GYROSCOPE_TYPE) {
                 System.arraycopy(values, 0, gyroSamples[calibrationSampleIndex], 0, 3);
                 gyroTimestamps[calibrationSampleIndex] = currentTime;
-            } else if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED) {
+            } else if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED || type == Sensor.TYPE_MAGNETIC_FIELD) {
                 System.arraycopy(values, 0, magnetSamples[calibrationSampleIndex], 0, 3);
                 magnetTimestamps[calibrationSampleIndex] = currentTime;
             }
 
-            if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED) {
+            if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED || type == Sensor.TYPE_MAGNETIC_FIELD) {
                 calibrationSampleIndex++;
                 if (calibrationSampleIndex >= CALIBRATION_SAMPLE_COUNT) {
                     computeBiases();
                     computeSampleRates();
                     isCalibrating = false;
-
-                    mMadgwick = new MadgwickAHRS(1 / Math.min(accSampleRate, Math.min(gyroSampleRate, magnetSampleRate)), filterBeta);
+                    mMadgwick = new MadgwickAHRS(1000 / Math.min(accSampleRate, Math.min(gyroSampleRate, 1f)), filterBeta);
+                    System.out.println("Callibration done");
                 }
             }
             return;
         }
 
-        if (type == Sensor.TYPE_ACCELEROMETER) {
+        if (type == TYPE_ACCELEROMETER_UNCALIBRATED || type == Sensor.TYPE_ACCELEROMETER) {
             values[0] -= accelBias[0];
             values[1] -= accelBias[1];
             values[2] -= accelBias[2];
@@ -142,7 +153,7 @@ public class SensorConnector implements SensorEventListener {
             lowPassFilter(values, filteredGyro);
             System.arraycopy(filteredGyro, 0, gyro, 0, 3);
 
-        } else if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED) {
+        } else if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED || type == Sensor.TYPE_MAGNETIC_FIELD) {
             values[0] -= magnetBias[0];
             values[1] -= magnetBias[1];
             values[2] -= magnetBias[2];
@@ -152,12 +163,10 @@ public class SensorConnector implements SensorEventListener {
 
         float[] quat = new float[4];
         if (accel != null && gyro != null && magnet != null) {
-            mMadgwick.update(
-                    gyro[0], gyro[1], gyro[2],
-                    accel[0], accel[1], accel[2],
-                    magnet[0], magnet[1], magnet[2]
-            );
-            quat = mMadgwick.getQuaternion();
+            System.out.println(Arrays.toString(gyro));
+            mMadgwick.no_filter(gyro[0],gyro[1],gyro[2]);
+            var euler = mMadgwick.getEulerAngles();
+            System.out.println("euler Ang "+Arrays.toString(euler));
         }
 
         values[0] = roundTo3Decimals(values[0]);
@@ -175,13 +184,13 @@ public class SensorConnector implements SensorEventListener {
         if (sensorListener == null) return;
 
         int type = sensor.getType();
-        if (type == Sensor.TYPE_ACCELEROMETER)
+        if (type == TYPE_ACCELEROMETER_UNCALIBRATED || type == Sensor.TYPE_ACCELEROMETER)
             sensorListener.onAccelerometerUpdate(q[1], q[2], q[3]);
         else if (type == GYROSCOPE_TYPE)
             sensorListener.onGyroscopeUpdate(values[0], values[1], values[2]);
-        else if (type == Sensor.TYPE_GRAVITY)
+        else if (type == TYPE_GRAVITY)
             sensorListener.onGravimeterUpdate(values[0], values[1], values[2]);
-        else if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED)
+        else if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED || type == Sensor.TYPE_MAGNETIC_FIELD)
             sensorListener.onMagnetometerUpdate(values[0], values[1], values[2]);
     }
 
