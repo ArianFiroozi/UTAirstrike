@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -95,19 +96,33 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
             }
         });
 
-        binding.shoot.setOnClickListener(new View.OnClickListener() {
+
+        Button shootButton = findViewById(R.id.shoot);
+        shootButton.bringToFront();
+        shootButton.invalidate();
+        shootButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 engine.shoot();
-//                Snackbar.make(view, "shot", Snackbar.LENGTH_SHORT)
-//                        .setAnchorView(R.id.shoot)
-//                        .show();
             }
         });
+
+
+
+//        binding.shoot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                engine.shoot();
+////                Snackbar.make(view, "shot", Snackbar.LENGTH_SHORT)
+////                        .setAnchorView(R.id.shoot)
+////                        .show();
+//            }
+//        });
 
         textViewTimer = findViewById(R.id.textViewTimer);
         running = true;
         startTimer();
+        startGame();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
 
@@ -122,9 +137,9 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
         gameObjects.add(new Building(new Vector2D((float) BUILDING_SIZE/2,BUILDING_SIZE*2), new Vector2D(250, BUILDING_SIZE)));
         gameObjects.add(new Building(new Vector2D(screenWidth-BUILDING_SIZE/2,screenHeight-BUILDING_SIZE*2), new Vector2D(250, BUILDING_SIZE)));
-        gameObjects.add(new Enemy(new Vector2D(screenWidth-BUILDING_SIZE/2,screenHeight-BUILDING_SIZE*3), new Vector2D(0,0), new Vector2D(70, 110)));
-        gameObjects.add(new Enemy(new Vector2D(screenWidth-BUILDING_SIZE/2,250), new Vector2D(0,0), new Vector2D(70, 110)));
-
+        gameObjects.add(new Enemy(new Vector2D(screenWidth-BUILDING_SIZE/2,screenHeight-BUILDING_SIZE*3), new Vector2D(0,0), new Vector2D(70, 110), true));
+        gameObjects.add(new Enemy(new Vector2D(screenWidth-BUILDING_SIZE/2,250), new Vector2D(0,0), new Vector2D(70, 110), true));
+        gameObjects.add(new Enemy(new Vector2D(100,250), new Vector2D(0,0), new Vector2D(70, 110), false));
 
 
         var gameEngine = new GameEngine(new AircraftSpeed(0, 0, 0), new Vector2D(screenWidth, screenHeight));
@@ -138,18 +153,35 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
             public void run() {
                 int minutes = seconds / 60;
                 int secs = seconds % 60;
-
-                // Format as mm:ss
+//                sleep
                 textViewTimer.setText(String.format("%02d:%02d", minutes, secs));
 
                 if (running) {
+                    engine.update();
                     seconds++;
                     handler.postDelayed(this, 1000); // delay 1 second
-                    if(seconds == 5){  //for test
-                        showPopup(seconds, false);
-                    }
                     if(seconds == 1800) {
                         running = false;
+                    }
+                }
+            }
+        });
+    }
+
+    private void startGame() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (running) {
+                    engine.update();
+                    handler.postDelayed(this, 10);
+                    if(GameEngine.isWon){
+                        running=false;
+                        showPopup(seconds, false);
+                    }
+                    else if(GameEngine.isLost){
+                        running=false;
+                        showPopup(seconds, false);
                     }
                 }
             }
@@ -242,7 +274,6 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
     public void onGyroscopeUpdate(float x, float y, float z) {
         GameEngine.aircraftSpeedDelta = new AircraftSpeed(y*5, x*5, z*10);
 //        engine.player.update();
-        engine.update();
         runOnUiThread(() -> {
             xGyro.setText("X: " + x);
             yGyro.setText("Y: " + y);
