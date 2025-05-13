@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -95,15 +96,28 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
             }
         });
 
-        binding.shoot.setOnClickListener(new View.OnClickListener() {
+
+        Button shootButton = findViewById(R.id.shoot);
+        shootButton.bringToFront();
+        shootButton.invalidate();
+        shootButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 engine.shoot();
-//                Snackbar.make(view, "shot", Snackbar.LENGTH_SHORT)
-//                        .setAnchorView(R.id.shoot)
-//                        .show();
             }
         });
+
+
+
+//        binding.shoot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                engine.shoot();
+////                Snackbar.make(view, "shot", Snackbar.LENGTH_SHORT)
+////                        .setAnchorView(R.id.shoot)
+////                        .show();
+//            }
+//        });
 
         textViewTimer = findViewById(R.id.textViewTimer);
         running = true;

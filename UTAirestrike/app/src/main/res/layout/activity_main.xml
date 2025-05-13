@@ -44,7 +44,7 @@
 <!--        </com.google.android.material.appbar.AppBarLayout>-->
 
     <Button
-        android:id="@+id/fireButton"
+        android:id="@+id/shoot"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentEnd="true"
@@ -64,17 +64,19 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/fireButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+
         android:layout_marginBottom="4dp"
         android:text="Calibrate" />
 
-    <Button
-        android:id="@+id/shoot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/fab"
-        android:layout_marginBottom="31dp"
-        android:text="Shoot" />
+<!--    <Button-->
+<!--        android:id="@+id/shoot"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_above="@+id/fab"-->
+<!--        android:layout_marginBottom="31dp"-->
+<!--        android:text="Shoot" />-->
 
     <!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
 <!--            android:id="@+id/fab"-->
