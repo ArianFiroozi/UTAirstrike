@@ -1,6 +1,7 @@
 package com.example.utairestrike.src.hardware.sensorWrapper;
 
 import static android.hardware.Sensor.TYPE_GRAVITY;
+import static android.hardware.Sensor.TYPE_GYROSCOPE;
 import static android.hardware.Sensor.TYPE_GYROSCOPE_UNCALIBRATED;
 import static android.hardware.Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED;
 import static android.hardware.Sensor.TYPE_ACCELEROMETER_UNCALIBRATED;
@@ -15,7 +16,7 @@ import android.os.Build;
 import java.util.Arrays;
 
 public class SensorConnector implements SensorEventListener {
-    private final int GYROSCOPE_TYPE = TYPE_GYROSCOPE_UNCALIBRATED;
+    private int GYROSCOPE_TYPE;
     private final SensorManager mSensorManager;
     private final Sensor mAccelerometer;
     private final Sensor mGyroscope;
@@ -53,6 +54,8 @@ public class SensorConnector implements SensorEventListener {
     private final float[][] magnetSamples = new float[CALIBRATION_SAMPLE_COUNT][3];
 
     public SensorConnector(Context context) {
+        GYROSCOPE_TYPE = TYPE_GYROSCOPE_UNCALIBRATED;
+
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -61,7 +64,14 @@ public class SensorConnector implements SensorEventListener {
             mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         }
 
-        mGyroscope = mSensorManager.getDefaultSensor(GYROSCOPE_TYPE);
+        var gyro = mSensorManager.getDefaultSensor(GYROSCOPE_TYPE);
+        if (gyro==null) {
+            System.out.println("EMULATOR!");
+            GYROSCOPE_TYPE = TYPE_GYROSCOPE;
+            gyro = mSensorManager.getDefaultSensor(GYROSCOPE_TYPE);
+        }
+        mGyroscope = gyro;
+
         mGravimeter = mSensorManager.getDefaultSensor(TYPE_GRAVITY);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
