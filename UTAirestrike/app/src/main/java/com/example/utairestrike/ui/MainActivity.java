@@ -137,9 +137,9 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
         gameObjects.add(new Building(new Vector2D((float) BUILDING_SIZE/2,BUILDING_SIZE*2), new Vector2D(250, BUILDING_SIZE)));
         gameObjects.add(new Building(new Vector2D(screenWidth-BUILDING_SIZE/2,screenHeight-BUILDING_SIZE*2), new Vector2D(250, BUILDING_SIZE)));
-        gameObjects.add(new Enemy(new Vector2D(screenWidth-BUILDING_SIZE/2,screenHeight-BUILDING_SIZE*3), new Vector2D(0,0), new Vector2D(70, 110)));
-        gameObjects.add(new Enemy(new Vector2D(screenWidth-BUILDING_SIZE/2,250), new Vector2D(0,0), new Vector2D(70, 110)));
-
+        gameObjects.add(new Enemy(new Vector2D(screenWidth-BUILDING_SIZE/2,screenHeight-BUILDING_SIZE*3), new Vector2D(0,0), new Vector2D(70, 110), true));
+        gameObjects.add(new Enemy(new Vector2D(screenWidth-BUILDING_SIZE/2,250), new Vector2D(0,0), new Vector2D(70, 110), true));
+        gameObjects.add(new Enemy(new Vector2D(100,250), new Vector2D(0,0), new Vector2D(70, 110), false));
 
 
         var gameEngine = new GameEngine(new AircraftSpeed(0, 0, 0), new Vector2D(screenWidth, screenHeight));
