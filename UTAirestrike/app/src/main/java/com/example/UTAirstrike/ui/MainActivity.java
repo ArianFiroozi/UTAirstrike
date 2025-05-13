@@ -1,6 +1,5 @@
 package com.example.utairestrike.ui;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 
 import com.example.utairestrike.R;
@@ -12,7 +11,7 @@ import com.example.utairestrike.src.model.Building;
 import com.example.utairestrike.src.model.Enemy;
 import com.example.utairestrike.src.model.GameObject;
 import com.example.utairestrike.src.model.Player;
-import com.example.utairestrike.src.utill.Vector2D;
+import com.example.utairestrike.src.util.Vector2D;
 import com.google.android.material.snackbar.Snackbar;
 import android.content.pm.ActivityInfo;
 
@@ -21,7 +20,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -35,7 +33,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import android.os.Handler;

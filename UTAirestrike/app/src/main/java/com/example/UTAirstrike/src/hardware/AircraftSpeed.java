@@ -1,9 +1,8 @@
 package com.example.utairestrike.src.hardware;
 
-import com.example.utairestrike.src.utill.Vector2D;
+import com.example.utairestrike.src.util.Vector2D;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class AircraftSpeed {
