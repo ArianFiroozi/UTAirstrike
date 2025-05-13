@@ -69,7 +69,6 @@ public class AircraftView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        System.out.println("ENEMY SIZE: " + engine.getObjects().size());
 
         float x = engine.getPlayer().getPosition().getX();
         float y = engine.getPlayer().getPosition().getY();

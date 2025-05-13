@@ -66,7 +66,6 @@ public class EnemyView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 //        engine.update();
-        System.out.println("ENEMY SIZE: " + engine.getObjects().size());
         super.onDraw(canvas);
         for (Object enemy : engine.getObjects())
             if (enemy instanceof Enemy) {

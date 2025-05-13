@@ -185,21 +185,23 @@ public class SensorConnector implements SensorEventListener {
         if (type == TYPE_ACCELEROMETER_UNCALIBRATED || type == Sensor.TYPE_ACCELEROMETER)
             sensorListener.onAccelerometerUpdate(values[0], values[1], values[2]);
         else if (type == GYROSCOPE_TYPE) {
-            System.out.println("GYRO" + Arrays.toString(values));
+//            System.out.println("GYRO" + Arrays.toString(values));
             sensorListener.onGyroscopeUpdate(values[0], values[1], values[2]);
-            try {
-                Thread.sleep(500); // Pause for 5 seconds
-            } catch (InterruptedException e) {
-                // Handle the exception (e.g., log it or take alternative action)
-                System.err.println("Thread was interrupted: " + e.getMessage());
-            }
+//            try {
+//                Thread.sleep(500); // Pause for 5 seconds
+//            } catch (InterruptedException e) {
+//                // Handle the exception (e.g., log it or take alternative action)
+//                System.err.println("Thread was interrupted: " + e.getMessage());
+//            }
         }
         else if (type == TYPE_GRAVITY) {
             float xA =(float) Math.atan(values[0]/Math.sqrt(values[1]*values[1] + values[2]*values[2]));
             float YA =(float) Math.atan(values[1]/Math.sqrt(values[0]*values[0] + values[2]*values[2]));
             float zA =(float) Math.atan(values[2]/Math.sqrt(values[1]*values[1] + values[0]*values[0]));
-            System.out.println(Arrays.toString(values));
-            System.out.print("rool: "+ YA+ "\t picth" + xA + "\n" );
+//            System.out.println(Arrays.toString(values));
+//            System.out.print("rool: "+ YA+ "\t picth" + xA + "\n" );
+            sensorListener.onRollPitch(YA, xA);
+
             sensorListener.onGravimeterUpdate(values[0], values[1], values[2]);
 //            try {
 //                Thread.sleep(500); // Pause for 5 seconds

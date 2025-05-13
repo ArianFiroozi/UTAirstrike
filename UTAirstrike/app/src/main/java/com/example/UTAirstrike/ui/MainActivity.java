@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
     @Override
     public void onGyroscopeUpdate(float x, float y, float z) {
-        GameEngine.aircraftSpeedDelta = new AircraftSpeed(y*5, x*5, z*10);
+//        GameEngine.aircraftSpeedDelta = new AircraftSpeed(GameEngine.aircraftSpeedDelta.getVelocity().getY(), GameEngine.aircraftSpeedDelta.getVelocity().getY(), z*10);
 //        engine.player.update();
 //        runOnUiThread(() -> {
 //            xGyro.setText("X: " + x);
@@ -282,7 +282,13 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
     public void onGravimeterUpdate(float x, float y, float z) {
 
     }
-
+    @Override
+    public void onRollPitch(float roll, float pitch)
+    {
+        System.out.println(roll*5 + " " + pitch*5);
+//        engine.update();
+        GameEngine.aircraftSpeedDelta = new AircraftSpeed(pitch*5, roll*5 , GameEngine.aircraftSpeedDelta.getRotationDelta());
+    }
     @Override
     public void onMagnetometerUpdate(float x, float y, float z) {
 //        runOnUiThread(() -> {
