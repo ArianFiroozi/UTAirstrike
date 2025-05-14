@@ -4,6 +4,9 @@ import java.time.ZonedDateTime;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import com.example.UTAirstrike.src.hardware.AircraftSpeed;
 import com.example.UTAirstrike.src.model.*;
@@ -57,39 +60,46 @@ public class GameEngine {
     }
 
     private boolean handleBuildingsUpdate(){
-        for (Building building : buildings){
-            if (cd.isCollide(building, player))
-                return true;//loose
-            bullets.removeIf(bullet -> cd.isCollide(building, bullet));
-        }
+        // 1) Check if player collides with any building
+        boolean playerHit = buildings.parallelStream()
+                .anyMatch(b -> cd.isCollide(b, player));
+        if (playerHit) return true;
+
+        // 2) Remove any bullets that hit a building (in parallel)
+        Set<Bullet> deadBullets = bullets.parallelStream()
+                .filter(b -> buildings.stream().anyMatch(building -> cd.isCollide(building, b)))
+                .collect(Collectors.toSet());
+        bullets.removeAll(deadBullets);
+
         return false;
     }
 
-    private boolean handleEnemiesUpdate(){ // key assumption shut bullets will kill enemy and prevent aircraft collision
-        Iterator<Enemy> enemiesIterator = enemies.iterator();
-        while (enemiesIterator.hasNext()) {
-            Enemy enemy = enemiesIterator.next();
-            boolean removeEnemy = false;
+    private boolean handleEnemiesUpdate(){
+        // 1) Find all (bullet, enemy) collisions in parallel
+        Set<Bullet> bulletsToRemove = ConcurrentHashMap.newKeySet();
+        Set<Enemy>  enemiesToRemove = ConcurrentHashMap.newKeySet();
 
-            Iterator<Bullet> iterator = bullets.iterator();
-            while (iterator.hasNext()) {
-                Bullet bullet = iterator.next();
-                if (cd.isCollide(enemy, bullet)) {
-                    iterator.remove();  // Safe removal
-                    removeEnemy = true; // Mark enemy for removal
-                }
-            }
+        bullets.parallelStream().forEach(b -> {
+            enemies.stream()
+                    .filter(e -> cd.isCollide(e, b))
+                    .findFirst()
+                    .ifPresent(e -> {
+                        bulletsToRemove.add(b);
+                        enemiesToRemove.add(e);
+                    });
+        });
 
-            if (removeEnemy) {
-                enemiesIterator.remove(); // Remove enemy safely
-            }
+        bullets.removeAll(bulletsToRemove);
+        enemies.removeAll(enemiesToRemove);
 
-            if (cd.isCollide(player, enemy)) {
-                return true; // Lose condition
-            }
-        }
+        // 2) Check if any enemy now collides with player
+        boolean playerCrashed = enemies.parallelStream()
+                .anyMatch(e -> cd.isCollide(player, e));
+        if (playerCrashed) return true;
+
         return false;
     }
+
 
     private void removeLostBullets(){
         bullets.removeIf(bullet -> !bullet.isInside(canvasSize));

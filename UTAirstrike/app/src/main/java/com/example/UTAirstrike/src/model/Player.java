@@ -17,15 +17,27 @@ public class Player extends GameObject {
         Player.canvasSize = canvasSize;
     }
 
-    public void takeBackToGameCanvas(){
-        if (this.position.getX() < 50 )
+    public void takeBackToGameCanvas(Vector2D deltaVelocity){
+        if (this.position.getX() < 50 ) {
             this.position.setX(50);
-        else if (this.position.getX() > canvasSize.getX()-50)
-            this.position.setX(canvasSize.getX()-50);
-        if (this.position.getY() < 100)
+            if (deltaVelocity.getX() > 0)
+                this.velocity.setX(deltaVelocity.getX());
+        }
+        else if (this.position.getX() > canvasSize.getX()-50) {
+            this.position.setX(canvasSize.getX() - 50);
+            if (deltaVelocity.getX() < 0)
+                this.velocity.setX(deltaVelocity.getX());
+        }
+        if (this.position.getY() < 100) {
             this.position.setY(100);
-        else if (this.position.getY() > canvasSize.getY()-100)
-            this.position.setY(canvasSize.getY()-100);
+            if (deltaVelocity.getY() > 0)
+                this.velocity.setY(deltaVelocity.getY());
+        }
+        else if (this.position.getY() > canvasSize.getY()-100) {
+            this.position.setY(canvasSize.getY() - 100);
+            if (deltaVelocity.getY() < 0)
+                this.velocity.setY(deltaVelocity.getY());
+        }
     }
 
     @Override
@@ -33,7 +45,7 @@ public class Player extends GameObject {
         velocity.add(deltaVelocity);
         rotation += rotationAngle;
         updatePosition(deltaTime);
-        takeBackToGameCanvas();
+        takeBackToGameCanvas(deltaVelocity);
     }
 
     private Vector2D calculateShootingPosition(){

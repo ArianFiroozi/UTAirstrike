@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
             public void run() {
                 if (running) {
                     engine.update();
-                    handler.postDelayed(this, 10);
+                    handler.postDelayed(this, 20);
                     if(GameEngine.isWon){
                         running=false;
                         showPopup(seconds, false);
@@ -269,7 +269,8 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
     @Override
     public void onGyroscopeUpdate(float x, float y, float z) {
-//        GameEngine.aircraftSpeedDelta = new AircraftSpeed(GameEngine.aircraftSpeedDelta.getVelocity().getY(), GameEngine.aircraftSpeedDelta.getVelocity().getY(), z*10);
+        GameEngine.aircraftSpeedDelta = new AircraftSpeed(GameEngine.aircraftSpeedDelta.getVelocity().getX(),GameEngine.aircraftSpeedDelta.getVelocity().getY(),- z*2);
+//        System.out.println(x*5+" " +y*5 +" " +z*10);
 //        engine.player.update();
 //        runOnUiThread(() -> {
 //            xGyro.setText("X: " + x);
@@ -285,9 +286,9 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
     @Override
     public void onRollPitch(float roll, float pitch)
     {
-        System.out.println(roll*5 + " " + pitch*5);
+//        System.out.println(roll/20 + " " + pitch/20);
+        GameEngine.aircraftSpeedDelta = new AircraftSpeed( -roll, pitch, GameEngine.aircraftSpeedDelta.getRotationDelta());
 //        engine.update();
-        GameEngine.aircraftSpeedDelta = new AircraftSpeed(pitch*5, roll*5 , GameEngine.aircraftSpeedDelta.getRotationDelta());
     }
     @Override
     public void onMagnetometerUpdate(float x, float y, float z) {

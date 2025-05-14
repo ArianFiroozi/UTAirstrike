@@ -32,7 +32,7 @@ public class SensorConnector implements SensorEventListener {
     private final long[] magnetTimestamps = new long[CALIBRATION_SAMPLE_COUNT];
     private final float filterBeta = 0.004f;
 
-    private static final float ALPHA = 0.1f;
+    private static final float ALPHA = 0.5f;
 
     private final float[] filteredAccel = new float[3];
     private final float[] filteredGyro = new float[3];
@@ -144,6 +144,9 @@ public class SensorConnector implements SensorEventListener {
                     isCalibrating = false;
                     mMadgwick = new MadgwickAHRS(1000 / Math.min(accSampleRate, Math.min(gyroSampleRate, 1f)), filterBeta);
                     System.out.println("Callibration done");
+                    System.out.println(computeRateFromTimestamps(accTimestamps));
+                    System.out.println(computeRateFromTimestamps(gyroTimestamps));
+
                 }
             }
             return;
@@ -153,7 +156,8 @@ public class SensorConnector implements SensorEventListener {
             values[0] -= accelBias[0];
             values[1] -= accelBias[1];
             values[2] -= accelBias[2];
-            lowPassFilter(values, filteredAccel);
+//            lowPassFilter(values, filteredAccel);
+            sensorListener.onRollPitch(values[0], values[1]);
             System.arraycopy(filteredAccel, 0, accel, 0, 3);
 
         } else if (type == GYROSCOPE_TYPE) {
@@ -200,7 +204,7 @@ public class SensorConnector implements SensorEventListener {
             float zA =(float) Math.atan(values[2]/Math.sqrt(values[1]*values[1] + values[0]*values[0]));
 //            System.out.println(Arrays.toString(values));
 //            System.out.print("rool: "+ YA+ "\t picth" + xA + "\n" );
-            sensorListener.onRollPitch(YA, xA);
+//            sensorListener.onRollPitch(values[0], values[1]);
 
             sensorListener.onGravimeterUpdate(values[0], values[1], values[2]);
 //            try {
