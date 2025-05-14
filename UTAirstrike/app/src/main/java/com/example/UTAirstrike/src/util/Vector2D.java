@@ -58,6 +58,13 @@ public class Vector2D {
         this.y *= deltaTime;
     }
 
+    public void trimLimit(float limit){
+        float coefficient = limit / (float) Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+        if (coefficient < 1){
+            this.x *= coefficient;
+            this.y *= coefficient;
+        }
+    }
     public void setX(float newX){
         this.x = newX;
     }

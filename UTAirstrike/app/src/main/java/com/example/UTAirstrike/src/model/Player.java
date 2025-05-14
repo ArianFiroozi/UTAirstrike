@@ -3,7 +3,8 @@ package com.example.UTAirstrike.src.model;
 import com.example.UTAirstrike.src.util.Vector2D;
 import java.lang.Math;
 public class Player extends GameObject {
-    public static final float BULLET_SPEED = 5;
+    public static final float BULLET_SPEED = 15;
+    public static final float PLAYER_VELOCITY_LIMIT = 5;
     private static Vector2D canvasSize ;
 
     public Player(Vector2D position, Vector2D velocity, Vector2D size, float rotation, Vector2D canvasSize) {
@@ -43,6 +44,7 @@ public class Player extends GameObject {
     @Override
     public void update(float deltaTime, Vector2D deltaVelocity, float rotationAngle) {
         velocity.add(deltaVelocity);
+        velocity.trimLimit(PLAYER_VELOCITY_LIMIT);
         rotation += rotationAngle;
         updatePosition(deltaTime);
         takeBackToGameCanvas(deltaVelocity);

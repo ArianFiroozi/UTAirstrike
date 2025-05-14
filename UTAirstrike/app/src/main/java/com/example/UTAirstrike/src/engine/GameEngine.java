@@ -29,7 +29,7 @@ public class GameEngine {
     public static long gameDuration;
     public static boolean isWon;
     public static boolean isLost;
-    private static final float DELTA_TIME = 1;
+    private static final float DELTA_TIME = 0.3F;
 
     public GameEngine(AircraftSpeed aircraftSpeedDelta, Vector2D canvasSize){
         GameEngine.aircraftSpeedDelta = aircraftSpeedDelta;

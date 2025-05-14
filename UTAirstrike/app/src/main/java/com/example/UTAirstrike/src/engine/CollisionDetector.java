@@ -4,25 +4,35 @@ import com.example.UTAirstrike.src.model.GameObject;
 
 public class CollisionDetector {
 
-    private boolean hasNoHorizontalOverlap(GameObject firstObject, GameObject secondObject){
-        float firstObjRightBorder = firstObject.getPosition().getX() + firstObject.getSize().getX()/2;
-        float firstObjLeftBorder = firstObject.getPosition().getX() - firstObject.getSize().getX()/2;
-        float secondObjRightBorder = secondObject.getPosition().getX() + secondObject.getSize().getX()/2;
-        float secondObjLeftBorder = secondObject.getPosition().getX() - secondObject.getSize().getX()/2;
+    /**
+     * Fast AABB overlap test:
+     *   |x1 - x2| <= (w1/2 + w2/2)
+     * && |y1 - y2| <= (h1/2 + h2/2)
+     */
+    public boolean isCollide(GameObject a, GameObject b) {
+        // positions
+        float ax = a.getPosition().getX();
+        float ay = a.getPosition().getY();
+        float bx = b.getPosition().getX();
+        float by = b.getPosition().getY();
 
-        return (firstObjRightBorder <= secondObjLeftBorder || firstObjLeftBorder >= secondObjRightBorder);
-    }
+        // half‑sizes
+        float ahw = a.getSize().getX() * 0.5f;
+        float ahh = a.getSize().getY() * 0.5f;
+        float bhw = b.getSize().getX() * 0.5f;
+        float bhh = b.getSize().getY() * 0.5f;
 
-    private boolean hasNoVerticalOverlap(GameObject firstObject, GameObject secondObject){
-        float firstObjUpperBorder = firstObject.getPosition().getY() + firstObject.getSize().getY()/2;
-        float firstObjLowerBorder = firstObject.getPosition().getY() - firstObject.getSize().getY()/2;
-        float secondObjUpperBorder = secondObject.getPosition().getY() + secondObject.getSize().getY()/2;
-        float secondObjLowerBorder = secondObject.getPosition().getY() - secondObject.getSize().getY()/2;
+        // compute deltas
+        float dx = ax - bx;
+        if (dx < 0) dx = -dx;     // abs
+        if (dx > ahw + bhw)      // quick X‑separation test
+            return false;
 
-        return (firstObjUpperBorder <= secondObjLowerBorder || firstObjLowerBorder >= secondObjUpperBorder);
-    }
+        float dy = ay - by;
+        if (dy < 0) dy = -dy;     // abs
+        if (dy > ahh + bhh)      // quick Y‑separation test
+            return false;
 
-    public boolean isCollide(GameObject firstObject, GameObject secondObject){
-        return !(hasNoHorizontalOverlap(firstObject, secondObject) || hasNoVerticalOverlap(firstObject, secondObject));
+        return true;             // overlap on both axes
     }
 }
