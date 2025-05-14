@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
                     handler.postDelayed(this, 5);
                     if(GameEngine.isWon){
                         running=false;
-                        showPopup(seconds, false);
+                        showPopup(seconds, true);
                     }
                     else if(GameEngine.isLost){
                         running=false;
