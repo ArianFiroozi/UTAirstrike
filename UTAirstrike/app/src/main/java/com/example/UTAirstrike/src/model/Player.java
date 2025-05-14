@@ -7,7 +7,7 @@ public class Player extends GameObject {
     public static final float PLAYER_VELOCITY_LIMIT = 30;
     private static Vector2D canvasSize ;
     private long lastShotTime = 0;
-    private static final long SHOOT_COOLDOWN = 200;
+    private static final long SHOOT_COOLDOWN = 500;
 
     public Player(Vector2D position, Vector2D velocity, Vector2D size, float rotation, Vector2D canvasSize) {
         super(position, velocity, size, rotation);
