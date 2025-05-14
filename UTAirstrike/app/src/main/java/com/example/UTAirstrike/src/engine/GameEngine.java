@@ -108,9 +108,9 @@ public class GameEngine {
         if (isLost || isWon)
             return true;
 
-        player.update(DELTA_TIME * (bullets.size()+1), aircraftSpeedDelta.getVelocity(), aircraftSpeedDelta.getRotationDelta());
+        player.update(DELTA_TIME * (bullets.size()*bullets.size()+1), aircraftSpeedDelta.getVelocity(), aircraftSpeedDelta.getRotationDelta());
         for (Bullet bullet : bullets)
-            bullet.update(DELTA_TIME * bullets.size(), ZERO_VELOCITY, 0);
+            bullet.update(DELTA_TIME * bullets.size()*bullets.size(), ZERO_VELOCITY, 0);
         boolean gameOver = false;
         gameOver = handleBuildingsUpdate();
         gameOver = (gameOver) ? gameOver : handleEnemiesUpdate();

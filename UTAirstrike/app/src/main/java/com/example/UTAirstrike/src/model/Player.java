@@ -3,11 +3,11 @@ package com.example.UTAirstrike.src.model;
 import com.example.UTAirstrike.src.util.Vector2D;
 import java.lang.Math;
 public class Player extends GameObject {
-    public static final float BULLET_SPEED = 70;
-    public static final float PLAYER_VELOCITY_LIMIT = 30;
+    public static final float BULLET_SPEED = 50;
+    public static final float PLAYER_VELOCITY_LIMIT = 20;
     private static Vector2D canvasSize ;
     private long lastShotTime = 0;
-    private static final long SHOOT_COOLDOWN = 500;
+    private static final long SHOOT_COOLDOWN = 200;
 
     public Player(Vector2D position, Vector2D velocity, Vector2D size, float rotation, Vector2D canvasSize) {
         super(position, velocity, size, rotation);
