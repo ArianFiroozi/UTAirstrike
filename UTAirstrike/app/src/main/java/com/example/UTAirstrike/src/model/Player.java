@@ -3,9 +3,11 @@ package com.example.UTAirstrike.src.model;
 import com.example.UTAirstrike.src.util.Vector2D;
 import java.lang.Math;
 public class Player extends GameObject {
-    public static final float BULLET_SPEED = 15;
-    public static final float PLAYER_VELOCITY_LIMIT = 5;
+    public static final float BULLET_SPEED = 70;
+    public static final float PLAYER_VELOCITY_LIMIT = 30;
     private static Vector2D canvasSize ;
+    private long lastShotTime = 0;
+    private static final long SHOOT_COOLDOWN = 200;
 
     public Player(Vector2D position, Vector2D velocity, Vector2D size, float rotation, Vector2D canvasSize) {
         super(position, velocity, size, rotation);
@@ -45,7 +47,7 @@ public class Player extends GameObject {
     public void update(float deltaTime, Vector2D deltaVelocity, float rotationAngle) {
         velocity.add(deltaVelocity);
         velocity.trimLimit(PLAYER_VELOCITY_LIMIT);
-        rotation += rotationAngle;
+        rotation += rotationAngle /2;
         updatePosition(deltaTime);
         takeBackToGameCanvas(deltaVelocity);
     }
@@ -61,6 +63,11 @@ public class Player extends GameObject {
     }
 
     public Bullet shoot(){  //essential assumption is that the aircraft basit angle is the head to the right
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastShotTime < SHOOT_COOLDOWN) {
+            return null;
+        }
+        lastShotTime = currentTime;
         Vector2D bulletStartingPosition = calculateShootingPosition();
         Vector2D bulletVelocity = calculateBulletStartingVelocity();
         return new Bullet(bulletStartingPosition, bulletVelocity);

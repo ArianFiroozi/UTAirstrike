@@ -24,8 +24,8 @@ public abstract class GameObject {
     public abstract void update(float deltaTime, Vector2D deltaVelocity, float rotationAngle);
 
     protected void updatePosition(float deltaTime){
-        Vector2D delta = new Vector2D(this.velocity.getX(), this.velocity.getY());
-        delta.multiply(deltaTime);
-        this.position.add(delta);
+        float dx = velocity.getX() * deltaTime;
+        float dy = velocity.getY() * deltaTime;
+        position.add(dx, dy);
     }
 }
