@@ -114,7 +114,7 @@ public class GameEngine {
         if (enemies.isEmpty())
             isWon = true;
         gameDuration = Duration.between(startingTime, ZonedDateTime.now()).toMillis();
-        isLost = false;//gameOver;
+        isLost = gameOver;
         return gameOver || isWon;
     }
 

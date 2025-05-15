@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
         AlertDialog dialog = builder.create();
 
-        closeButton.setOnClickListener(v -> dialog.dismiss());
+        closeButton.setOnClickListener(v -> System.exit(0));
         dialog.show();
     }
 
