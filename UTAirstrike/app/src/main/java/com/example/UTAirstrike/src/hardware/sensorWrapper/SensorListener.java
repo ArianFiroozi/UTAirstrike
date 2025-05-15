@@ -10,4 +10,6 @@ public interface SensorListener {
     void onMagnetometerUpdate(float x, float y, float z);
 
     void onRollPitch(float roll, float pitch);
+    void onCalibrationDone();
+
 }

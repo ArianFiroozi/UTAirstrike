@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
         sensorConnector = new SensorConnector(this);
         sensorConnector.setSensorUpdateListener(this);
+        sensorConnector.startCalibration();
 
 //        setSensorDisplay();
 
@@ -124,6 +125,14 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
 
     }
+    @Override
+    public void onCalibrationDone()
+    {
+        Snackbar.make(binding.getRoot(), "Calibration Done", Snackbar.LENGTH_SHORT)
+                .setAnchorView(R.id.fab)
+                .show();
+    }
+
 
     @NonNull
     private static

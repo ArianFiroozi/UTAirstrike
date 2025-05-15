@@ -42,7 +42,7 @@ public class SensorConnector implements SensorEventListener {
     private final float[] accel = new float[3];
     private final float[] gyro = new float[3];
     private final float[] magnet = new float[3];
-    private static final int CALIBRATION_SAMPLE_COUNT = 100;
+    private static final int CALIBRATION_SAMPLE_COUNT = 30;
     private int calibrationSampleIndex = 0;
     private boolean isCalibrating = false;
 
@@ -143,7 +143,8 @@ public class SensorConnector implements SensorEventListener {
                     computeSampleRates();
                     isCalibrating = false;
                     mMadgwick = new MadgwickAHRS(1000 / Math.min(accSampleRate, Math.min(gyroSampleRate, 1f)), filterBeta);
-                    System.out.println("Callibration done");
+                    System.out.println("Calibration done");
+                    sensorListener.onCalibrationDone();
                     System.out.println(computeRateFromTimestamps(accTimestamps));
                     System.out.println(computeRateFromTimestamps(gyroTimestamps));
 
