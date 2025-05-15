@@ -45,7 +45,6 @@ public class BuildingView extends View {
         updateRunnable = new Runnable() {
             @Override
             public void run() {
-                //Building.update(null,null,null);
                 invalidate();
                 handler.postDelayed(this, UPDATE_INTERVAL_MS);
             }

@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import com.example.UTAirstrike.src.hardware.AircraftSpeed;
 import com.example.UTAirstrike.src.model.*;
@@ -111,9 +109,7 @@ public class GameEngine {
         player.update(DELTA_TIME * (bullets.size()*bullets.size()+1), aircraftSpeedDelta.getVelocity(), aircraftSpeedDelta.getRotationDelta());
         for (Bullet bullet : bullets)
             bullet.update(DELTA_TIME * bullets.size()*bullets.size(), ZERO_VELOCITY, 0);
-        boolean gameOver = false;
-        gameOver = handleBuildingsUpdate();
-        gameOver = (gameOver) ? gameOver : handleEnemiesUpdate();
+        boolean gameOver = handleBuildingsUpdate() || handleEnemiesUpdate();
         removeLostBullets();
         if (enemies.isEmpty())
             isWon = true;

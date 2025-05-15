@@ -73,7 +73,6 @@ public class Player extends GameObject {
         return new Bullet(bulletStartingPosition, bulletVelocity);
     }
 
-    // Rotation getter/setter
     public float getRotation() { return rotation; }
     public void setRotation(float rotation) { this.rotation = rotation; }
 }

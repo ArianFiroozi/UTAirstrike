@@ -13,7 +13,6 @@ import android.view.View;
 
 import com.example.UTAirstrike.R;
 import com.example.UTAirstrike.src.engine.GameEngine;
-import com.example.UTAirstrike.src.logic.actors.Aircraft;
 import com.example.UTAirstrike.src.model.Bullet;
 
 public class AircraftView extends View {
@@ -45,7 +44,6 @@ public class AircraftView extends View {
         updateRunnable = new Runnable() {
             @Override
             public void run() {
-                Aircraft.update();
                 invalidate();
                 handler.postDelayed(this, UPDATE_INTERVAL_MS);
             }

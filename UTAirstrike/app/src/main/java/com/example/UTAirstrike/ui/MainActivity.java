@@ -22,15 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
 import com.example.UTAirstrike.databinding.ActivityMainBinding;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -39,12 +32,7 @@ import android.os.Handler;
 
 public class MainActivity extends AppCompatActivity implements SensorListener {
 
-    private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-//    TextView xGyro, yGyro, zGyro;
-//    TextView xAccel, yAccel, zAccel;
-//    TextView xMagnet, yMagnet, zMagnet;
-//    TextView xGrav, yGrav, zGrav;
     private GameEngine engine;
     private SensorConnector sensorConnector;
 
@@ -82,8 +70,6 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         sensorConnector.setSensorUpdateListener(this);
         sensorConnector.startCalibration();
 
-//        setSensorDisplay();
-
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,18 +90,6 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
                 engine.shoot();
             }
         });
-
-
-
-//        binding.shoot.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                engine.shoot();
-////                Snackbar.make(view, "shot", Snackbar.LENGTH_SHORT)
-////                        .setAnchorView(R.id.shoot)
-////                        .show();
-//            }
-//        });
 
         textViewTimer = findViewById(R.id.textViewTimer);
         running = true;
@@ -159,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
             public void run() {
                 int minutes = seconds / 60;
                 int secs = seconds % 60;
-//                sleep
                 textViewTimer.setText(String.format("%02d:%02d", minutes, secs));
 
                 if (running) {
@@ -211,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(popupView);
-        builder.setCancelable(false); // prevent closing by tapping outside
+        builder.setCancelable(false);
 
         AlertDialog dialog = builder.create();
 
@@ -219,73 +192,13 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         dialog.show();
     }
 
-
-//    private void setSensorDisplay() {
-//        xGyro = findViewById(R.id.XGyroscope);
-//        yGyro = findViewById(R.id.YGyroscope);
-//        zGyro = findViewById(R.id.ZGyroscope);
-//
-//        xAccel = findViewById(R.id.XAccelerometer);
-//        yAccel = findViewById(R.id.YAccelerometer);
-//        zAccel = findViewById(R.id.ZAccelerometer);
-//
-//        xMagnet = findViewById(R.id.XMagnet);
-//        yMagnet = findViewById(R.id.YMagnet);
-//        zMagnet = findViewById(R.id.ZMagnet);
-//
-//        xGrav = findViewById(R.id.Xgravity);
-//        yGrav = findViewById(R.id.Ygravity);
-//        zGrav = findViewById(R.id.Zgravity);
-//    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-//    @Override
-//    public boolean onSupportNavigateUp() {
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-//        return NavigationUI.navigateUp(navController, appBarConfiguration)
-//                || super.onSupportNavigateUp();
-//    }
-
     @Override
     public void onAccelerometerUpdate(float x, float y, float z) {
-//        runOnUiThread(() -> {
-//            xAccel.setText("X: " + x);
-//            yAccel.setText("Y: " + y);
-//            zAccel.setText("Z: " + z);
-//        });
     }
 
     @Override
     public void onGyroscopeUpdate(float x, float y, float z) {
         GameEngine.aircraftSpeedDelta = new AircraftSpeed(GameEngine.aircraftSpeedDelta.getVelocity().getX(),GameEngine.aircraftSpeedDelta.getVelocity().getY(),- z*2);
-//        System.out.println(x*5+" " +y*5 +" " +z*10);
-//        engine.player.update();
-//        runOnUiThread(() -> {
-//            xGyro.setText("X: " + x);
-//            yGyro.setText("Y: " + y);
-//            zGyro.setText("Z: " + z);
-//        });
     }
 
     @Override
@@ -295,17 +208,10 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
     @Override
     public void onRollPitch(float roll, float pitch)
     {
-//        System.out.println(roll/20 + " " + pitch/20);
         GameEngine.aircraftSpeedDelta = new AircraftSpeed( -roll, pitch, GameEngine.aircraftSpeedDelta.getRotationDelta());
-//        engine.update();
     }
     @Override
     public void onMagnetometerUpdate(float x, float y, float z) {
-//        runOnUiThread(() -> {
-//            xMagnet.setText("X: " + x);
-//            yMagnet.setText("Y: " + y);
-//            zMagnet.setText("Z: " + z);
-//        });
     }
 
     @Override
@@ -319,7 +225,4 @@ public class MainActivity extends AppCompatActivity implements SensorListener {
         super.onPause();
         sensorConnector.unregisterSensors();
     }
-
-
-
 }

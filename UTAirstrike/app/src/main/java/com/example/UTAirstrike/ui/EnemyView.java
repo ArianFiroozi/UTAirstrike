@@ -65,19 +65,12 @@ public class EnemyView extends View {
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
-//        engine.update();
         super.onDraw(canvas);
         for (Object enemy : engine.getObjects())
             if (enemy instanceof Enemy) {
                 Enemy enemyInstance = (Enemy) enemy;
-//                Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
 
                 Bitmap bmp = enemyInstance.Isflipped() ? enemyBitmap : enemyBitmapFlipped;
-
-//               int width = (int) ((Enemy) enemy).getSize().getX();
-//               int height = (int) ((Enemy) enemy).getSize().getY();
-//                enemyBitmap = Bitmap.createScaledBitmap(enemyBitmap, width, height, true);
-
                 Matrix enemyMatrix = new Matrix();
                 enemyMatrix.postTranslate(-enemyBitmap.getWidth() / 2f, -enemyBitmap.getHeight() / 2f);
                 enemyMatrix.postTranslate(((Enemy) enemy).getPosition().getX(),

@@ -13,8 +13,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 
-import java.util.Arrays;
-
 public class SensorConnector implements SensorEventListener {
     private int GYROSCOPE_TYPE;
     private final SensorManager mSensorManager;
@@ -100,14 +98,6 @@ public class SensorConnector implements SensorEventListener {
         isCalibrating = true;
     }
 
-    protected void onResume() {
-        registerSensors();
-    }
-
-    protected void onPause() {
-        unregisterSensors();
-    }
-
     public void registerSensors() {
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
@@ -157,7 +147,6 @@ public class SensorConnector implements SensorEventListener {
             values[0] -= accelBias[0];
             values[1] -= accelBias[1];
             values[2] -= accelBias[2];
-//            lowPassFilter(values, filteredAccel);
             sensorListener.onRollPitch(values[0], values[1]);
             System.arraycopy(filteredAccel, 0, accel, 0, 3);
 
@@ -190,30 +179,10 @@ public class SensorConnector implements SensorEventListener {
         if (type == TYPE_ACCELEROMETER_UNCALIBRATED || type == Sensor.TYPE_ACCELEROMETER)
             sensorListener.onAccelerometerUpdate(values[0], values[1], values[2]);
         else if (type == GYROSCOPE_TYPE) {
-//            System.out.println("GYRO" + Arrays.toString(values));
             sensorListener.onGyroscopeUpdate(values[0], values[1], values[2]);
-//            try {
-//                Thread.sleep(500); // Pause for 5 seconds
-//            } catch (InterruptedException e) {
-//                // Handle the exception (e.g., log it or take alternative action)
-//                System.err.println("Thread was interrupted: " + e.getMessage());
-//            }
         }
         else if (type == TYPE_GRAVITY) {
-            float xA =(float) Math.atan(values[0]/Math.sqrt(values[1]*values[1] + values[2]*values[2]));
-            float YA =(float) Math.atan(values[1]/Math.sqrt(values[0]*values[0] + values[2]*values[2]));
-            float zA =(float) Math.atan(values[2]/Math.sqrt(values[1]*values[1] + values[0]*values[0]));
-//            System.out.println(Arrays.toString(values));
-//            System.out.print("rool: "+ YA+ "\t picth" + xA + "\n" );
-//            sensorListener.onRollPitch(values[0], values[1]);
-
             sensorListener.onGravimeterUpdate(values[0], values[1], values[2]);
-//            try {
-//                Thread.sleep(500); // Pause for 5 seconds
-//            } catch (InterruptedException e) {
-//                // Handle the exception (e.g., log it or take alternative action)
-//                System.err.println("Thread was interrupted: " + e.getMessage());
-//            }
         } else if (type == TYPE_MAGNETIC_FIELD_UNCALIBRATED || type == Sensor.TYPE_MAGNETIC_FIELD)
             sensorListener.onMagnetometerUpdate(values[0], values[1], values[2]);
     }
